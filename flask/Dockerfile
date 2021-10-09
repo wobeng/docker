@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:experimental
 FROM public.ecr.aws/lambda/python:latest
 
 # install packages
