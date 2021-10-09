@@ -24,5 +24,5 @@ RUN printf "#!/bin/bash\n \
     \nsource /lambda-entrypoint.sh \"\$@\" \
     \nfi\n"  > /var/task/init.sh
 
-RUN chmod u+x /var/task/init.sh
+RUN chmod 777 /var/task/init.sh
 ENTRYPOINT [ "/var/task/init.sh" ]
