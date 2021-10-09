@@ -25,4 +25,5 @@ RUN printf "#!/bin/bash\n \
     \nfi\n"  > /var/task/init.sh
 
 RUN chmod 777 /var/task/init.sh
+CMD [ "main.handler" ]
 ENTRYPOINT [ "/var/task/init.sh" ]
