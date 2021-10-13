@@ -13,7 +13,7 @@ RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 # Entry
 RUN printf "#!/bin/bash\n \
     \nif [[ -z \"\${AWS_EXECUTION_ENV}\" ]]; then  \
-    \ngunicorn --worker-tmp-dir /dev/shm  --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\$PORT main:app  \
+    \ngunicorn --worker-tmp-dir /dev/shm --forwarded-allow-ips="*" --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\$PORT main:app  \
     \nelse \
     \nsource /lambda-entrypoint.sh \"\$@\" \
     \nfi\n"  > /var/task/init.sh
