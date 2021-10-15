@@ -5,4 +5,4 @@ FROM public.ecr.aws/yblew/y-python-master:latest
 COPY . ${LAMBDA_TASK_ROOT}
 
 # Install requirements
-RUN --mount=type=ssh pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+RUN --mount=type=ssh pip install -r requirements.txt

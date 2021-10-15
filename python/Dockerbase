@@ -6,7 +6,7 @@ RUN yum update -y
 RUN yum install -y git
 
 # install requirements
-RUN pip3 install gunicorn
+RUN pip install gunicorn
 RUN mkdir -p -m 0600 ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
