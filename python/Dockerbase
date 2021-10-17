@@ -6,7 +6,7 @@ RUN yum update -y
 RUN yum install -y git
 
 # install requirements
-RUN pip install gunicorn
+RUN pip3 install gunicorn
 RUN mkdir -p -m 0600 ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
@@ -15,8 +15,8 @@ RUN printf "#!/bin/bash\n \
     \nif [[ -z \"\${PORT}\" ]]; then  \
     \nsource /lambda-entrypoint.sh \"\$@\" \
     \nelse \
-    \necho \"Running on port \$PORT\" \
-    \ngunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\$PORT main:app  \    
+    \necho \"Running on port \${PORT}\" \
+    \ngunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} main:app  \    
     \nfi\n"  > /var/task/init.sh
 RUN chmod +x /var/task/init.sh
 ENTRYPOINT ["/var/task/init.sh" ]
