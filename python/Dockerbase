@@ -6,20 +6,23 @@ RUN yum update -y
 RUN yum install -y git
 
 # install requirements
+RUN pip3 install wheel
 RUN pip3 install gunicorn
 RUN mkdir -p -m 0600 ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # Entry
 RUN printf "#!/bin/bash\n \
-    \nif [[ -z \"\${PORT}\" ]]; then  \
-    \nsource /lambda-entrypoint.sh \"\$@\" \
+    \nif [[ -z \"\${AWS_EXECUTION_ENV}\" ]]; then  \
+    \n  exec \"\$@\" \
     \nelse \
-    \necho \"Running on port \${PORT}\" \
-    \ngunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} main:app  \    
-    \nfi\n"  > /var/task/init.sh
+    \n  if [[ -z \"\${PORT}\" ]]; then  \
+    \n      source /lambda-entrypoint.sh main.handler \"\$@\" \
+    \n  else \
+    \n      echo \"Running on port \${PORT}\" \
+    \n      gunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} main:app  \
+    \n  fi \
+    \nfi\n"  > init.sh
+
 RUN chmod +x /var/task/init.sh
 ENTRYPOINT ["/var/task/init.sh" ]
-
-# Default supply if lambda
-CMD [ "main.handler" ]
