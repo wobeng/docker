@@ -8,6 +8,7 @@ RUN yum install -y git
 # install requirements
 RUN pip3 install wheel
 RUN pip3 install gunicorn
+RUN pip3 install --upgrade pip
 RUN mkdir -p -m 0600 ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
