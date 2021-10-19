@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM public.ecr.aws/lambda/python:latest
+FROM public.ecr.aws/lambda/python:3.8
 
 # install packages
 RUN yum update -y
