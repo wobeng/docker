@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:experimental
 FROM public.ecr.aws/codebuild/amazonlinux2-x86_64-standard:3.0
 
 # Install dependencies
@@ -6,7 +5,7 @@ RUN yum update -y
 RUN yum install -y gcc gcc-c++ make wget yum-utils groupinstall development
 RUN yum install -y zlib-devel libffi-devel python-devel openssl-devel git zip unzip
 RUN yum install -y jq which gettext epel-release tar dbus-glib amazon-efs-utils
-RUN yum install -y dotnet-sdk-3.1 libunwind rsync
+RUN yum install -y dotnet-sdk-3.1 libunwind rsync ncurses
 
 
 # Activate npm and install packages
