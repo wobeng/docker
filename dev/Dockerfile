@@ -14,3 +14,6 @@ RUN sudo ./aws/install
 
 # [Optional] Uncomment this line to install global node packages.
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g @angular/cli" 2>&1
+
+ADD --chown=vscode:vscode init.sh /usr/local/bin/init.sh
+RUN chmod u+x /usr/local/bin/init.sh
