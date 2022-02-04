@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -i
 
 add-ssh-key()
 {
@@ -7,6 +7,7 @@ if [[ -z "${GH_SSH_KEY}" ]]; then
 else
   echo "Setting auth to ssh"
   AUTH="ssh"
+  mkdir -p ~/.ssh
   echo -e "${GH_SSH_KEY}" >>~/.ssh/id_rsa
   touch ~/.ssh/config
   {
@@ -20,7 +21,7 @@ else
 fi
 }
 
-script_folder="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
+script_folder=`pwd`
 workspaces_folder="$(cd "${script_folder}/.." && pwd)"
 
 add-aws-config()
