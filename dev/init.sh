@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -i
+#!/bin/bash
 
 add-ssh-key()
 {
