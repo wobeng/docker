@@ -96,7 +96,7 @@ install-requires()
     cd "${1}"
 
     if [[ -f "package.json" ]]; then
-      npm --prefix . install .
+      yes | npm --prefix . install .
     fi 
 
     if [[ -f "requirements.txt" ]]; then
