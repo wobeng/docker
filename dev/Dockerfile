@@ -16,4 +16,10 @@ RUN sudo ./aws/install
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g --silent @angular/cli" 2>&1
 
 ADD init.sh /usr/local/bin/workspace-one-time-setup.sh
+ADD startup.sh /usr/local/bin/workspace-one-time-startup.sh
+
 RUN chmod +x /usr/local/bin/workspace-one-time-setup.sh
+RUN chmod +x /usr/local/bin/workspace-one-time-startup.sh
+
+RUN echo '' >> /etc/bash.bashrc
+RUN echo 'bash /usr/local/bin/workspace-one-time-startup.sh' >> /etc/bash.bashrc
