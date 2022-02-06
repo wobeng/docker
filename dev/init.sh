@@ -69,7 +69,7 @@ add-aws-config()
           echo ""
       } >> ~/.aws/config
       if [ ! -z "$trigger_sso_signin" ]; then
-        aws configure sso
+        aws sso login --profile $trigger_sso_signin
       fi
   done
 }
