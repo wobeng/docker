@@ -1,5 +1,10 @@
 #!/bin/bash -i
 
+if [ -z "$BASH_VERSION" ]
+then
+    exec bash "$0" "$@"
+fi
+
 add-ssh-key()
 {
 if [[ -z "${GH_SSH_KEY}" ]]; then
