@@ -105,7 +105,7 @@ install-requires()
     fi 
 
     if [[ -f "requirements.txt" ]]; then
-       python -m pip install -r requirements.txt
+       /workspaces/virenv/bin/python -m pip install -r requirements.txt
     fi
 
 }
@@ -116,8 +116,9 @@ install-requires()
   mkdir -p /workspaces/envs
   touch /workspaces/envs/dev
 
-  python -m pip install --upgrade pip
 
+  python -m venv /workspaces/virenv
+  /workspaces/virenv/bin/python -m pip install --upgrade pip
 # set up workspace
 if [ -f "${script_folder}/main.code-workspace" ]; then
 
@@ -154,7 +155,7 @@ if [ -f "${script_folder}/main.code-workspace" ]; then
       if [ -d "$directory" ]; then
         if [[ -f "$directory/setup.py" ]]; then
           echo "Installing package as pip local $directory"
-          python -m pip install -e $directory
+          /workspaces/virenv/bin/python -m pip install -e $directory
         fi 
       fi
     done
