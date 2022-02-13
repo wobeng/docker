@@ -113,12 +113,20 @@ install-requires()
 
 
   # create envs dir
-  mkdir -p /workspaces/envs
-  touch /workspaces/envs/dev
+mkdir -p /workspaces/envs
+touch /workspaces/envs/dev
 
+# set up virenv and packages
+python -m venv /workspaces/virenv
+/workspaces/virenv/bin/python -m pip install --upgrade pip
+/workspaces/virenv/bin/python -m pip install --upgrade pylint
+/workspaces/virenv/bin/python -m pip install --upgrade autopep8
+/workspaces/virenv/bin/python -m pip install --upgrade black
+/workspaces/virenv/bin/python -m pip install --upgrade isort
+/workspaces/virenv/bin/python -m pip install --upgrade flake8
+/workspaces/virenv/bin/python -m pip install --upgrade pyflakes
+/workspaces/virenv/bin/python -m pip install --upgrade pre-commit
 
-  python -m venv /workspaces/virenv
-  /workspaces/virenv/bin/python -m pip install --upgrade pip
 # set up workspace
 if [ -f "${script_folder}/main.code-workspace" ]; then
 
