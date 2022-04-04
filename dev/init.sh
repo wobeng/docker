@@ -115,6 +115,10 @@ install-requires()
   # create envs dir
 mkdir -p /workspaces/envs
 touch /workspaces/envs/dev
+mkdir -p /var/log/exported
+
+echo "ENVIRONMENT=develop" >> /workspaces/envs/dev
+echo "IS_LOCAL=true" >> /workspaces/envs/dev
 
 # set up virenv and packages
 python -m venv /workspaces/virenv
@@ -173,8 +177,8 @@ if [ -f "${script_folder}/main.code-workspace" ]; then
    fi
    cd "${script_folder}"
 
+  # login aws
   aws_roles="$(jq -cr '.aws_roles // empty' main.code-workspace)"
-
   if [ ! -z "$aws_roles" ]; then
       add-aws-config
   fi
