@@ -15,10 +15,10 @@ RUN sudo ./aws/install
 # [Optional] Uncomment this line to install global node packages.
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g --silent @angular/cli" 2>&1
 
-ADD init.sh /workspaces/setup.sh
+ADD init.sh /usr/local/bin/workspace-one-time-setup.sh
 ADD startup.sh /usr/local/bin/workspace-one-time-startup.sh
 
-RUN chmod +x /workspaces/setup.sh
+RUN chmod +x /usr/local/bin/workspace-one-time-setup.sh
 RUN chmod +x /usr/local/bin/workspace-one-time-startup.sh
 
 RUN echo '' >> /etc/bash.bashrc
