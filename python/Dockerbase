@@ -21,7 +21,7 @@ RUN printf "#!/bin/bash\n \
     \n      source /lambda-entrypoint.sh main.handler \"\$@\" \
     \n  else \
     \n      echo \"Running on port \${PORT}\" \
-    \n      gunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} main:app  \
+    \n      gunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} --timeout 120 main:app  \
     \n  fi \
     \nfi\n"  > init.sh
 
