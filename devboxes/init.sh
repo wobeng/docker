@@ -19,6 +19,8 @@ then
     sudo mkdir -p /efs/home
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+    #ensure all ssh keys are the same
+    /usr/bin/rsync -aI --include='ssh_host_*' --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 fi
 
 
