@@ -38,7 +38,7 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
         echo " IdentityFile $homedir/.ssh/ed25519_$domain"
         echo " AddKeysToAgent yes"
         echo " UseKeychain yes"
-    } >>~/.ssh/config
+    } >> "$homedir/.ssh/config"
     chmod 700 "$homedir/.ssh"
     chmod 600 "$homedir/.ssh/config"
     chmod 600 "$homedir/.ssh/authorized_keys"
