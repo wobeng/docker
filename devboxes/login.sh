@@ -31,7 +31,7 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
     mkdir -p "$homedir/.ssh"
     touch "$homedir/.ssh/config"
     touch "$homedir/.ssh/authorized_keys"
-    /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/ed25519_$domain" <<<y >/dev/null 2>&1
+    /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/ed25519_$domain" -C "$PAM_USER" <<<y >/dev/null 2>&1
     /usr/bin/cat "$homedir/.ssh/ed25519_$domain.pub" > "$homedir/.ssh/authorized_keys"
     {
         echo "Host *"
