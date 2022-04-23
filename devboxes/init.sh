@@ -31,7 +31,7 @@ sudo usermod -aG docker ec2-user
 # add user script
 sudo mkdir -p /etc/pam_scripts
 wget -O  /etc/pam_scripts/login-logger.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/login.sh
-cat /etc/pam_scripts/login-logger.sh | sed -e "s/EFS_ID/$EFS_ID/" >> /etc/pam_scripts/login-logger.sh
+cat /etc/pam_scripts/login-logger.sh | sed -e "s/EFS_ID/$EFS_ID/" > /etc/pam_scripts/login-logger.sh
 
 sudo chmod 755 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
@@ -50,11 +50,11 @@ sudo chmod 600 /etc/sssd/ldap/google.crt
 sudo chmod 600 /etc/sssd/ldap/google.key
 
 wget -O  /etc/sssd/sssd.conf https://raw.githubusercontent.com/wobeng/docker/master/devboxes/sssd.conf 
-cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAINS/$SSSD_DOMAINS/" >> /etc/sssd/sssd.conf
-cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAIN1/$SSSD_DOMAIN1/" >> /etc/sssd/sssd.conf
-cat /etc/sssd/sssd.conf | sed -e "s/SSSD_SEARCH_BASE1/$SSSD_SEARCH_BASE1/" >> /etc/sssd/sssd.conf
-cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAIN2/$SSSD_DOMAIN2/" >> /etc/sssd/sssd.conf
-cat /etc/sssd/sssd.conf | sed -e "s/SSSD_SEARCH_BASE2/$SSSD_SEARCH_BASE2/" >> /etc/sssd/sssd.conf
+cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAINS/$SSSD_DOMAINS/" > /etc/sssd/sssd.conf
+cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAIN1/$SSSD_DOMAIN1/" > /etc/sssd/sssd.conf
+cat /etc/sssd/sssd.conf | sed -e "s/SSSD_SEARCH_BASE1/$SSSD_SEARCH_BASE1/" > /etc/sssd/sssd.conf
+cat /etc/sssd/sssd.conf | sed -e "s/SSSD_DOMAIN2/$SSSD_DOMAIN2/" > /etc/sssd/sssd.conf
+cat /etc/sssd/sssd.conf | sed -e "s/SSSD_SEARCH_BASE2/$SSSD_SEARCH_BASE2/" > /etc/sssd/sssd.conf
 
 sudo authconfig --enablesssd --enablesssdauth --enablemkhomedir --updateall
 
