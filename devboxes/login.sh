@@ -20,7 +20,7 @@ if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam
 then
     mkdir -p "$efshomedir"
     /usr/bin/rsync -a $homedir/ $efshomedir
-
+    echo "export USER_EMAIL=$PAM_USER" >> "$efshomedir/.bashrc"
     chown "$PAM_USER":"$PAM_USER" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
@@ -29,10 +29,18 @@ fi
 # make sure there is a ssh key
 if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
     mkdir -p "$homedir/.ssh"
+    touch "$homedir/.ssh/config"
     touch "$homedir/.ssh/authorized_keys"
     /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/ed25519_$domain" <<<y >/dev/null 2>&1
     /usr/bin/cat "$homedir/.ssh/ed25519_$domain.pub" > "$homedir/.ssh/authorized_keys"
+    {
+        echo "Host *"
+        echo " IdentityFile $homedir/.ssh/ed25519_$domain"
+        echo " AddKeysToAgent yes"
+        echo " UseKeychain yes"
+    } >>~/.ssh/config
     chmod 700 "$homedir/.ssh"
+    chmod 600 "$homedir/.ssh/config"
     chmod 600 "$homedir/.ssh/authorized_keys"
     chown "$PAM_USER":"$PAM_USER" -R "$homedir/.ssh"
 fi
