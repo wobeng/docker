@@ -1,0 +1,27 @@
+{
+    "name": "devboxes",
+    "image": "public.ecr.aws/yblew/y-dev-master:latest",
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "dbaeumer.vscode-eslint"
+    ],
+    "settings": {
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.defaultInterpreterPath": "/workspaces/virenv/bin/python",
+        "python.formatting.autopep8Path": "/workspaces/virenv/bin/autopep8",
+        "python.formatting.blackPath": "/workspaces/virenv/bin/black",
+        "python.formatting.yapfPath": "/workspaces/virenv/bin/yapf",
+        "python.linting.banditPath": "/workspaces/virenv/bin/bandit",
+        "python.linting.flake8Path": "/workspaces/virenv/bin/flake8",
+        "python.linting.mypyPath": "/workspaces/virenv/bin/mypy",
+        "python.linting.pylintPath": "/workspaces/virenv/bin/pylint",
+        "python.linting.pydocstylePath": "/workspaces/virenv/bin/pydocstyle",
+        "python.linting.pycodestylePath": "/workspaces/virenv/bin/pycodestyle"
+    },
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
+    "remoteUser": "vscode"
+}
