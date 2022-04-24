@@ -39,7 +39,9 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
 fi
 
 # add user to docker group
+/usr/sbin/usermod -aG docker $username
 /usr/sbin/usermod -aG docker $PAM_USER
+
 
 # make sure user can always login
 chmod 700 "$homedir/.ssh"
