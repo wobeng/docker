@@ -5,6 +5,7 @@ username=$(/usr/bin/echo $PAM_USER | cut -d@ -f1)
 domain=$(/usr/bin/echo $PAM_USER | cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  $PAM_USER | cut -d@ -f2)
 homedir=$(/usr/bin/getent passwd $username | cut -d: -f6)
+userid=$(/usr/bin/id -u $PAM_USER)
 efshomedir="/efs$homedir"
 
 if [ "$username" == "root" ] || [ "$username" == "ec2-user" ]; then
@@ -12,16 +13,13 @@ if [ "$username" == "root" ] || [ "$username" == "ec2-user" ]; then
     exit 0
 fi
 
-# add user to docker group
-/usr/sbin/usermod -aG docker $username
-
 # mount user efs
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
     mkdir -p "$efshomedir"
     /usr/bin/rsync -a $homedir/ $efshomedir
     echo "export USER_EMAIL=$PAM_USER" >> "$efshomedir/.bashrc"
-    chown "$PAM_USER":"$PAM_USER" -R "$efshomedir"
+    chown "$userid":"$userid" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 fi
@@ -38,8 +36,19 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
         echo " IdentityFile $homedir/.ssh/ed25519_$domain"
         echo " AddKeysToAgent yes"
     } >> "$homedir/.ssh/config"
-    chmod 700 "$homedir/.ssh"
-    chmod 600 "$homedir/.ssh/config"
-    chmod 600 "$homedir/.ssh/authorized_keys"
-    chown "$PAM_USER":"$PAM_USER" -R "$homedir/.ssh"
+fi
+
+# add user to docker group
+/usr/sbin/usermod -aG docker $userid
+
+# make sure user can always login
+chmod 700 "$homedir/.ssh"
+chmod 600 "$homedir/.ssh/config"
+chmod 600 "$homedir/.ssh/authorized_keys"
+chown "$userid":"$userid"  -R "$homedir/.ssh"
+
+# make devboxes
+mkdir -p "$homedir/devbox/.devcontainer"
+if [ ! -f "$homedir/devbox/.devcontainer/devcontainer.json" ]; then
+    wget -O  "$homedir/devbox/.devcontainer" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
 fi
