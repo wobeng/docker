@@ -50,5 +50,5 @@ chown "$userid":"$userid"  -R "$homedir/.ssh"
 # make devboxes
 mkdir -p "$homedir/devbox/.devcontainer"
 if [ ! -f "$homedir/devbox/.devcontainer/devcontainer.json" ]; then
-    wget -O  "$homedir/devbox/.devcontainer" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
+    /usr/bin/wget -O  "$homedir/devbox/.devcontainer" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
 fi
