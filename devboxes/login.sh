@@ -17,7 +17,9 @@ fi
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
     mkdir -p "$efshomedir"
+    mkdir -p "/tmp/$userid"
     /usr/bin/rsync -a $homedir/ $efshomedir
+    echo "export TMPDIR=/tmp/$userid" >> "$efshomedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$efshomedir/.bashrc"
     chown "$userid":"$userid" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
