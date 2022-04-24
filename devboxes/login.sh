@@ -39,7 +39,7 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
 fi
 
 # add user to docker group
-/usr/sbin/usermod -aG docker $userid
+/usr/sbin/usermod -aG docker $PAM_USER
 
 # make sure user can always login
 chmod 700 "$homedir/.ssh"
@@ -49,6 +49,7 @@ chown "$userid":"$userid"  -R "$homedir/.ssh"
 
 # make devboxes
 mkdir -p "$homedir/devbox/.devcontainer"
+chown "$userid":"$userid"  -R "$homedir/devbox"
 if [ ! -f "$homedir/devbox/.devcontainer/devcontainer.json" ]; then
-    /usr/bin/wget -O  "$homedir/devbox/.devcontainer" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
+    /usr/bin/wget -O  "$homedir/devbox/.devcontainer/devcontainer.json" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
 fi
