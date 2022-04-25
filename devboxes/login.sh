@@ -34,6 +34,7 @@ then
     chown "$userid":"$userid" -R "/tmp/$userid"
     echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
+    echo "export USER_ID=$userid" >> "$homedir/.bashrc"
 
     # auto start ssh agent
     /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/ssh_agent.sh

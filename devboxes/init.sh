@@ -26,6 +26,10 @@ fi
 
 # docker
 sudo amazon-linux-extras install docker -y
+mkdir -p /efs/docker
+mkdir -p /etc/docker
+touch /etc/docker/daemon.json
+echo "{\"data-root\": \"/efs/docker\"}" > /etc/docker/daemon.json
 sudo systemctl enable docker
 sudo systemctl restart docker
 sudo usermod -aG docker ec2-user
