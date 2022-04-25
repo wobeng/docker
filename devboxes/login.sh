@@ -1,17 +1,25 @@
 #!/bin/bash
 set -e
 
+
+if  [ "$PAM_USER" == "root" ] || [ "$PAM_USER" == "ec2-user" ]; then
+    /usr/bin/echo "Nothing to do for $username"
+    exit 0
+fi
+
+
+if [ ! -n "$PAM_USER" ]; then
+  echo "Please set $PAM_USER"
+  exit 0
+fi
+
+
 username=$(/usr/bin/echo $PAM_USER | cut -d@ -f1)
 domain=$(/usr/bin/echo $PAM_USER | cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  $PAM_USER | cut -d@ -f2)
 homedir=$(/usr/bin/getent passwd $username | cut -d: -f6)
 userid=$(/usr/bin/id -u $PAM_USER)
 efshomedir="/efs$homedir"
-
-if [ "$username" == "root" ] || [ "$username" == "ec2-user" ]; then
-    /usr/bin/echo "Nothing to do for $username"
-    exit 0
-fi
 
 # mount user efs and first time process
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
@@ -41,7 +49,7 @@ then
 
     # mount
     mkdir -p "$efshomedir"
-    /usr/bin/rsync -a $homedir/ $efshomedir
+    /usr/bin/rsync -a --include='.bash_*' --exclude='*' $homedir/ $efshomedir/
     chown "$userid":"$userid" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
