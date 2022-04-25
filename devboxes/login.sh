@@ -27,11 +27,23 @@ then
     /usr/sbin/usermod -aG docker $username
     /usr/sbin/usermod -aG docker $PAM_USER
 
+    # add envs
+    echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
+    echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
+
+    # auto start ssh agent
+    {
+        echo "if [ -z "$SSH_AUTH_SOCK" ]; then"
+        echo "  RUNNING_AGENT=\"`ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]'`\""
+        echo "  if [ \"$RUNNING_AGENT\" = \"0\" ]; then"
+        echo "      ssh-agent -s &> $HOME/.ssh/ssh-agent"
+        echo "  fi"
+        echo "  eval `cat $HOME/.ssh/ssh-agent`"
+        echo "fi"
+    } >> "$homedir/.bash_profile"
 
     # mount
     /usr/bin/rsync -a $homedir/ $efshomedir
-    echo "export TMPDIR=/tmp/$userid" >> "$efshomedir/.bashrc"
-    echo "export USER_EMAIL=$PAM_USER" >> "$efshomedir/.bashrc"
     chown "$userid":"$userid" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
@@ -57,13 +69,6 @@ chmod 700 "$homedir/.ssh"
 chmod 600 "$homedir/.ssh/config"
 chmod 600 "$homedir/.ssh/authorized_keys"
 chown "$userid":"$userid"  -R "$homedir/.ssh"
-
-# ensure ssh agent is running
- if [ ! -S $homedir/.ssh/ssh_auth_sock ]; then
-   eval `/usr/bin/ssh-agent`
-   /usr/bin/ln -sf "$SSH_AUTH_SOCK" $homedir/.ssh/ssh_auth_sock
- fi
- export SSH_AUTH_SOCK=$homedir/.ssh/ssh_auth_sock
 
 # make devboxes
 mkdir -p "$homedir/devbox/.devcontainer"
