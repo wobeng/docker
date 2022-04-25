@@ -37,7 +37,7 @@ then
 
     # auto start ssh agent
     /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/ssh_agent.sh
-    echo "\n" >> "$homedir/.bash_profile"
+    echo "" >> "$homedir/.bash_profile"
     /usr/bin/cat "/tmp/ssh_agent.sh" >> "$homedir/.bash_profile"
 
     # mount
