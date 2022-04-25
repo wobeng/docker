@@ -42,7 +42,7 @@ then
 
     # mount
     mkdir -p "$efshomedir"
-    /usr/bin/rsync -a --ignore-existing --exclude='*' --include='.bash*'  $homedir/ $efshomedir/
+    /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homedir/ $efshomedir/
     chown "$userid":"$userid" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
