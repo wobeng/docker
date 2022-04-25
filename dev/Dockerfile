@@ -22,7 +22,6 @@ ADD startup.sh /usr/local/bin/workspace-one-time-startup.sh
 
 RUN mkdir -p /var/log/exported
 
-RUN mkdir /workspace  && chown vscode:vscode -R /workspace
 RUN chmod 777 /var/log/exported
 RUN chmod +x /usr/local/bin/setup.sh
 RUN chmod +x /usr/local/bin/sso.sh
