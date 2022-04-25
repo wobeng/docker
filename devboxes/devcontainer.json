@@ -22,6 +22,6 @@
         "python.linting.pycodestylePath": " /workspace/configs/virenv/bin/pycodestyle"
     },
     "workspaceFolder": "/workspace",
-    "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
+    "workspaceMount": "source=${localEnv:USER_ID},target=/workspace,type=volume",
     "remoteUser": "vscode"
 }
