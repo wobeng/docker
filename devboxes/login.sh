@@ -13,13 +13,18 @@ if [ "$username" == "root" ] || [ "$username" == "ec2-user" ]; then
     exit 0
 fi
 
-# mount user efs
+# mount user efs and first time process
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
-    mkdir -p "$efshomedir"
-    mkdir -p "/tmp/$userid"
-    chown "$userid":"$userid" -R "/tmp/$userid"
 
+    # mount
+    mkdir -p "$efshomedir"
+    /usr/bin/rsync -a $homedir/ $efshomedir
+    chown "$userid":"$userid" -R "$efshomedir"
+    /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
+    echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+
+    # set git configs
     /usr/bin/git config --global user.name "$username"
     /usr/bin/git config --global user.email "$PAM_USER"
 
@@ -28,6 +33,8 @@ then
     /usr/sbin/usermod -aG docker $PAM_USER
 
     # add envs
+    mkdir -p "/tmp/$userid"
+    chown "$userid":"$userid" -R "/tmp/$userid"
     echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
 
@@ -43,11 +50,6 @@ then
         echo "fi"
     } >> "$homedir/.bash_profile"
 
-    # mount
-    /usr/bin/rsync -a $homedir/ $efshomedir
-    chown "$userid":"$userid" -R "$efshomedir"
-    /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
-    echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 fi
 
 # make sure there is a ssh key
@@ -63,7 +65,6 @@ if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
         echo " AddKeysToAgent yes"
     } >> "$homedir/.ssh/config"
 fi
-
 
 # make sure user can always login
 chmod 700 "$homedir/.ssh"
