@@ -17,17 +17,6 @@ fi
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
 
-    # mount
-    mkdir -p "$efshomedir"
-    /usr/bin/rsync -a $homedir/ $efshomedir
-    chown "$userid":"$userid" -R "$efshomedir"
-    /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
-    echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
-
-    # set git configs
-    /usr/bin/git config --global user.name "$username"
-    /usr/bin/git config --global user.email "$PAM_USER"
-
     # add user to docker group
     /usr/sbin/usermod -aG docker $username
     /usr/sbin/usermod -aG docker $PAM_USER
@@ -49,6 +38,13 @@ then
         echo "  eval \`cat \$HOME/.ssh/ssh-agent\`"
         echo "fi"
     } >> "$homedir/.bash_profile"
+
+    # mount
+    mkdir -p "$efshomedir"
+    /usr/bin/rsync -a $homedir/ $efshomedir
+    chown "$userid":"$userid" -R "$efshomedir"
+    /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
+    echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
 fi
 
