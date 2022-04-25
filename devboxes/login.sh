@@ -3,7 +3,7 @@ set -e
 
 
 if  [ "$PAM_USER" == "root" ] || [ "$PAM_USER" == "ec2-user" ]; then
-    /usr/bin/echo "Nothing to do for $username"
+    /usr/bin/echo "Nothing to do for $PAM_USER"
     exit 0
 fi
 
@@ -17,7 +17,7 @@ fi
 username=$(/usr/bin/echo $PAM_USER | cut -d@ -f1)
 domain=$(/usr/bin/echo $PAM_USER | cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  $PAM_USER | cut -d@ -f2)
-homedir=$(/usr/bin/getent passwd $username | cut -d: -f6)
+homedir=$(/usr/bin/getent passwd $PAM_USER | cut -d: -f6)
 userid=$(/usr/bin/id -u $PAM_USER)
 efshomedir="/efs$homedir"
 
