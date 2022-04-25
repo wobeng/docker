@@ -20,10 +20,14 @@ ADD sso.sh /usr/local/bin/sso.sh
 ADD devbox.sh /usr/local/bin/devbox
 ADD startup.sh /usr/local/bin/workspace-one-time-startup.sh
 
-RUN chmod u+x /usr/local/bin/setup.sh
-RUN chmod u+x /usr/local/bin/sso.sh
-RUN chmod u+x /usr/local/bin/devbox
-RUN chmod u+x /usr/local/bin/workspace-one-time-startup.sh
+RUN mkdir -p /var/log/exported
+
+RUN mkdir /workspace  && chown vscode:vscode /workspace
+RUN chmod 777 /var/log/exported
+RUN chmod +x /usr/local/bin/setup.sh
+RUN chmod +x /usr/local/bin/sso.sh
+RUN chmod +x /usr/local/bin/devbox
+RUN chmod +x /usr/local/bin/workspace-one-time-startup.sh
 
 RUN echo '' >> /etc/bash.bashrc
 RUN echo 'bash /usr/local/bin/workspace-one-time-startup.sh' >> /etc/bash.bashrc

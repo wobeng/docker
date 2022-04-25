@@ -6,22 +6,21 @@ if [ -t 1 ] && [[ "${TERM_PROGRAM}" = "vscode" || "${TERM_PROGRAM}" = "codespace
     mkdir -p /workspace/repos
     mkdir -p /home/vscode/.aws
     mkdir -p /workspace/configs/envs
-    mkdir -p /var/log/exported
+    mkdir -p /workspace/configs/aws
 
     ln -s /home/vscode/.aws /workspace/configs/aws
 
     touch /workspace/configs/aws/config
     touch /workspace/configs/envs/dev
 
-    sudo chmod 777 /var/log/exported
-    chown vscode:vscode -R /workspace
+    sudo chown vscode:vscode -R /workspace
 
 
     echo "ENVIRONMENT=develop" >> /workspace/configs/envs/dev
     echo "IS_LOCAL=true" >> /workspace/configs/envs/dev
 
     # set up virenv and packages
-    python -m venv/workspace/configs/virenv
+    python -m venv /workspace/configs/virenv
    /workspace/configs/virenv/bin/python -m pip install --upgrade pip
    /workspace/configs/virenv/bin/python -m pip install --upgrade pylint
    /workspace/configs/virenv/bin/python -m pip install --upgrade autopep8
