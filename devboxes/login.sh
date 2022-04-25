@@ -36,16 +36,9 @@ then
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
 
     # auto start ssh agent
-    touch "$homedir/.bash_profile"
-    {
-        echo "if [ -z \"\$SSH_AUTH_SOCK\" ]; then"
-        echo "  RUNNING_AGENT=\"\`ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]'\`\""
-        echo "  if [ \"\$RUNNING_AGENT\" = \"0\" ]; then"
-        echo "      ssh-agent -s &> \$HOME/.ssh/ssh-agent"
-        echo "  fi"
-        echo "  eval \`cat \$HOME/.ssh/ssh-agent\`"
-        echo "fi"
-    } >> "$homedir/.bash_profile"
+    /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/ssh_agent.sh
+    echo "\n" >> "$homedir/.bash_profile"
+    /usr/bin/cat "/tmp/ssh_agent.sh" >> "$homedir/.bash_profile"
 
     # mount
     mkdir -p "$efshomedir"
