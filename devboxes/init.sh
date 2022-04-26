@@ -16,20 +16,31 @@ sudo systemctl start amazon-ssm-agent
 # mount efs
 if ! grep -qxF "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
+    # mount efs
     sudo mkdir -p /efs/home
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+    
     #ensure all ssh keys are the same
     /usr/bin/rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 fi
 
 
+# mount docker
+if ! grep -qxF "$EFS_ID:/docker /var/lib/docker efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
+then
+    # mount docker
+    sudo mkdir -p /var/lib/docker
+    mount -t efs -o tls,iam "$EFS_ID":/docker /var/lib/docker
+    echo "$EFS_ID:/docker /var/lib/docker efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+fi
+
 # docker
 sudo amazon-linux-extras install docker -y
-mkdir -p /efs/docker
-mkdir -p /etc/docker
-touch /etc/docker/daemon.json
-echo "{\"data-root\": \"/efs/docker\"}" > /etc/docker/daemon.json
+#mkdir -p /efs/docker
+#mkdir -p /etc/docker
+#touch /etc/docker/daemon.json
+#echo "{\"data-root\": \"/efs/docker\"}" > /etc/docker/daemon.json
 sudo systemctl enable docker
 sudo systemctl restart docker
 sudo usermod -aG docker ec2-user
