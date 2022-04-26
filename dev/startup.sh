@@ -3,6 +3,8 @@
 # Run workspace-one-time-setup if configured and terminal is interactive
 if [ -t 1 ] && [[ "${TERM_PROGRAM}" = "vscode" || "${TERM_PROGRAM}" = "codespaces" ]] && [ ! -f "$HOME/.config/vscode-dev-containers/workspace-one-time-startup-success" ]; then
 
+    sudo chown vscode:vscode -R /workspace
+
     mkdir -p /workspace/repos
     mkdir -p /home/vscode/.aws
     mkdir -p /workspace/configs/envs
@@ -12,9 +14,6 @@ if [ -t 1 ] && [[ "${TERM_PROGRAM}" = "vscode" || "${TERM_PROGRAM}" = "codespace
 
     touch /workspace/configs/aws/config
     touch /workspace/configs/envs/dev
-
-    sudo chown vscode:vscode -R /workspace
-
 
     echo "ENVIRONMENT=develop" >> /workspace/configs/envs/dev
     echo "IS_LOCAL=true" >> /workspace/configs/envs/dev
