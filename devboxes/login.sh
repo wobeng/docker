@@ -42,7 +42,8 @@ then
     /usr/bin/cat "/tmp/ssh_agent.sh" >> "$homedir/.bash_profile"
 
     # add docker volume
-    docker volume create --driver local --opt type=nfs --opt o=addr=EFS_ID.efs.us-east-1.amazonaws.com,rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 --opt device=:/docker/volumes/"$userid" "$userid"
+    mkdir -p /efs/docker/volumes/$userid
+    docker volume create --driver local --opt type=nfs --opt o=addr=EFS_ID.efs.us-east-1.amazonaws.com,rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 --opt device=:"/docker/volumes/$userid" "$userid"
 
     # mount
     mkdir -p "$efshomedir"
