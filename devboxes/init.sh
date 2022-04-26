@@ -26,21 +26,8 @@ then
 fi
 
 
-# mount docker
-if ! grep -qxF "$EFS_ID:/docker /var/lib/docker efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
-then
-    # mount docker
-    sudo mkdir -p /var/lib/docker
-    mount -t efs -o tls,iam "$EFS_ID":/docker /var/lib/docker
-    echo "$EFS_ID:/docker /var/lib/docker efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
-fi
-
 # docker
 sudo amazon-linux-extras install docker -y
-#mkdir -p /efs/docker
-#mkdir -p /etc/docker
-#touch /etc/docker/daemon.json
-#echo "{\"data-root\": \"/efs/docker\"}" > /etc/docker/daemon.json
 sudo systemctl enable docker
 sudo systemctl restart docker
 sudo usermod -aG docker ec2-user
