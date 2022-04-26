@@ -8,7 +8,6 @@ if [ -t 1 ] && [[ "${TERM_PROGRAM}" = "vscode" || "${TERM_PROGRAM}" = "codespace
     mkdir -p /workspace/repos
     mkdir -p /home/vscode/.aws
     mkdir -p /workspace/configs/envs
-    mkdir -p /workspace/configs/aws
 
     ln -s /home/vscode/.aws /workspace/configs/aws
 
