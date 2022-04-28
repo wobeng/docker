@@ -31,14 +31,13 @@ if ! grep -qxF "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,nore
 
 then
     sudo amazon-linux-extras install docker -y
-    sudo systemctl enable docker
-    sudo systemctl restart docker
 
     sudo mkdir -p /efs/docker/volumes
-    sudo rsync -a  /var/lib/docker/volumes/ /efs/docker/volumes/
+    sudo mkdir -p /var/lib/docker/volumes
     mount -t efs -o tls,iam "$EFS_ID":/docker/volumes /var/lib/docker/volumes
     echo "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
+    sudo systemctl enable docker
     sudo systemctl restart docker
     sudo usermod -aG docker ec2-user   
 
