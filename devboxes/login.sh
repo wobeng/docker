@@ -32,7 +32,7 @@ then
     # add envs
     mkdir -p "/tmp/$userid"
     chown "$userid":"$userid" -R "/tmp/$userid"
-    echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
+    #echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
     echo "export USER_ID=$userid" >> "$homedir/.bashrc"
 
