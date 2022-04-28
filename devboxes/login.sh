@@ -51,16 +51,19 @@ then
 fi
 
 # make sure there is a ssh key
-if [ ! -f "$homedir/.ssh/ed25519_$domain" ]; then
+if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
     mkdir -p "$homedir/.ssh"
     touch "$homedir/.ssh/config"
     touch "$homedir/.ssh/authorized_keys"
-    /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/ed25519_$domain" -C "$PAM_USER" <<<y >/dev/null 2>&1
-    /usr/bin/cat "$homedir/.ssh/ed25519_$domain.pub" > "$homedir/.ssh/authorized_keys"
+    /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/id_ed25519" -C "$PAM_USER" <<<y >/dev/null 2>&1
+    /usr/bin/cat "$homedir/.ssh/id_ed25519.pub" > "$homedir/.ssh/authorized_keys"
     {
         echo "Host *"
-        echo " IdentityFile $homedir/.ssh/ed25519_$domain"
+        echo " IgnoreUnknown UseKeychain"
         echo " AddKeysToAgent yes"
+        echo " ForwardAgent yes"
+        echo " UseKeychain yes"
+        echo " IdentityFile $homedir/.ssh/id_ed25519"
     } >> "$homedir/.ssh/config"
 fi
 
