@@ -22,7 +22,7 @@ then
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
     
     #ensure all ssh keys are the same
-    #sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
+    sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 fi
 
 
@@ -31,15 +31,17 @@ if ! grep -qxF "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,nore
 
 then
     sudo amazon-linux-extras install docker -y
+    sudo systemctl enable docker
+    sudo systemctl restart docker
+
     sudo rsync -a  /var/lib/docker/volumes/ /efs/docker/volumes/
     mount -t efs -o tls,iam "$EFS_ID":/docker/volumes /var/lib/docker/volumes
     echo "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
-fi
+    sudo systemctl restart docker
+    sudo usermod -aG docker ec2-user   
 
-sudo systemctl enable docker
-sudo systemctl restart docker
-sudo usermod -aG docker ec2-user    
+fi 
 
 
 # add user script
