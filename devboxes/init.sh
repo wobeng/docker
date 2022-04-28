@@ -16,7 +16,7 @@ sudo systemctl start amazon-ssm-agent
 # mount efs
 if ! grep -qxF "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
-    # mount efs
+
     sudo mkdir -p /efs/home
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
@@ -26,11 +26,21 @@ then
 fi
 
 
-# docker
-sudo amazon-linux-extras install docker -y
+# Install docker and mount docker volumes to efs
+if ! grep -qxF "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
+
+then
+    sudo amazon-linux-extras install docker -y
+    /usr/bin/rsync -a  /var/lib/docker/volumes/ /efs/docker/volumes/
+    mount -t efs -o tls,iam "$EFS_ID":/docker/volumes /var/lib/docker/volumes
+    echo "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+
+fi
+
 sudo systemctl enable docker
 sudo systemctl restart docker
-sudo usermod -aG docker ec2-user
+sudo usermod -aG docker ec2-user    
+
 
 # add user script
 sudo mkdir -p /etc/pam_scripts
