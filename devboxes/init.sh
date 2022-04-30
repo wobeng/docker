@@ -64,8 +64,8 @@ sudo mkdir -p /etc/pam_scripts
 sudo mkdir -p /var/log/exported
 chmod 777 /var/log/exported
 
-curl "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
-unzip -o /tmp/master.zip
+curl -L "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
+unzip /tmp/master.zip -d /tmp
 
 mv /tmp/docker-master/devboxes/bash_scripts/login.sh /etc/pam_scripts/login-logger.sh
 mv /tmp/docker-master/devboxes/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
