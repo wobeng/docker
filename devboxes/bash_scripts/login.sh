@@ -35,6 +35,7 @@ then
     chown "$userid":"$userid" -R "/workspaces/$fulldomain/$PAM_USER"
 
     # add envs
+    touch "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
     echo "export USER_ID=$userid" >> "$homedir/.bashrc"
 
