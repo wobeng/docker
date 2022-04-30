@@ -36,13 +36,20 @@ then
 
     # add envs
     touch "$homedir/.bashrc"
-    echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
     echo "export USER_ID=$userid" >> "$homedir/.bashrc"
+    echo "export USER_DOMAIN=$domain" >> "$homedir/.bashrc"
+    echo "export USER_FULLDOMAIN=$fulldomain" >> "$homedir/.bashrc"
+    echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
+    echo "export USER_WORKSPACE=/workspaces/$fulldomain/$PAM_USER" >> "$homedir/.bashrc"
+
 
     # auto start ssh agent
-    /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/ssh_agent.sh
     echo "" >> "$homedir/.bash_profile"
-    /usr/bin/cat "/tmp/ssh_agent.sh" >> "$homedir/.bash_profile"
+    /usr/bin/cat "/tmp/docker-master/devboxes/bash_scripts/ssh_agent.sh" >> "$homedir/.bash_profile"
+
+    # user start up script
+    echo "" >> "$homedir/.bash_profile"
+    echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homedir/.bash_profile"
 
     # mount
     mkdir -p "$efshomedir"
@@ -78,5 +85,5 @@ chown "$userid":"$userid"  -R "$homedir/.ssh"
 mkdir -p "$homedir/containers/.devcontainer"
 chown "$userid":"$userid"  -R "$homedir/containers"
 if [ ! -f "$homedir/containers/.devcontainer/devcontainer.json" ]; then
-    /usr/bin/wget -O  "$homedir/containers/.devcontainer/devcontainer.json" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
+    /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$homedir/containers/.devcontainer/devcontainer.json"
 fi

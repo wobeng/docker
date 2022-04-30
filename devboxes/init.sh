@@ -61,14 +61,28 @@ sudo usermod -aG docker ec2-user
 
 # add user script
 sudo mkdir -p /etc/pam_scripts
-wget -O  /etc/pam_scripts/login-logger.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/login.sh
-wget -O  /etc/pam_scripts/auth_keys.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/auth_keys.sh
-sed -i "s/EFS_ID/$EFS_ID/g" /etc/pam_scripts/login-logger.sh
+sudo mkdir -p /var/log/exported
+chmod 777 /var/log/exported
+
+curl "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
+unzip -o /tmp/master.zip
+
+mv /tmp/docker-master/devboxes/bash_scripts/login.sh /etc/pam_scripts/login-logger.sh
+mv /tmp/docker-master/devboxes/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
+
+mv /tmp/docker-master/devboxes/user_scripts/devbox.sh /usr/local/bin/devbox
+mv /tmp/docker-master/devboxes/user_scripts/setup.sh /usr/local/bin/setup.sh
+mv /tmp/docker-master/devboxes/user_scripts/sso.sh /usr/local/bin/sso.sh
+mv /tmp/docker-master/devboxes/user_scripts/startup.sh /usr/local/bin/workspace-one-time-startup.sh
 
 sudo chmod 755 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
-sudo chmod ugo+x /etc/pam_scripts/auth_keys.sh
-sudo chmod ugo+x /etc/pam_scripts/login-logger.sh
+sudo chmod ugo+x -R /etc/pam_scripts
+
+sudo chmod ugo+x /usr/local/bin/devbox
+sudo chmod ugo+x /usr/local/bin/sso.sh
+sudo chmod ugo+x /usr/local/bin/setup.sh
+sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 
 sudo grep -qxF "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
 
@@ -82,7 +96,7 @@ echo -e "${GOOGLE_LDAP_KEY}" >> /etc/sssd/ldap/google.key
 sudo chmod 600 /etc/sssd/ldap/google.crt
 sudo chmod 600 /etc/sssd/ldap/google.key
 
-wget -O  /etc/sssd/sssd.conf https://raw.githubusercontent.com/wobeng/docker/master/devboxes/sssd.conf 
+mv /tmp/docker-master/devboxes/sssd.conf  /etc/sssd/sssd.conf
 sed -i "s/SSSD_DOMAINS/$SSSD_DOMAINS/g" /etc/sssd/sssd.conf
 sed -i "s/SSSD_DOMAIN1/$SSSD_DOMAIN1/g" /etc/sssd/sssd.conf
 sed -i "s/SSSD_SEARCH_BASE1/$SSSD_SEARCH_BASE1/g" /etc/sssd/sssd.conf
