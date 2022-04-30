@@ -29,15 +29,17 @@ then
     /usr/sbin/usermod -aG docker $username
     /usr/sbin/usermod -aG docker $PAM_USER
 
+    # create workspace
+    mkdir -p "/workspaces/$fulldomain/$PAM_USER"
+    chmod 700 "/workspaces/$fulldomain/$PAM_USER"
+    chown "$userid":"$userid" -R "/workspaces/$fulldomain/$PAM_USER"
+
     # add envs
-    mkdir -p "/tmp/$userid"
-    chown "$userid":"$userid" -R "/tmp/$userid"
-    #echo "export TMPDIR=/tmp/$userid" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
     echo "export USER_ID=$userid" >> "$homedir/.bashrc"
 
     # auto start ssh agent
-    /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/ssh_agent.sh
+    /usr/bin/wget -O  "/tmp/ssh_agent.sh" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/ssh_agent.sh
     echo "" >> "$homedir/.bash_profile"
     /usr/bin/cat "/tmp/ssh_agent.sh" >> "$homedir/.bash_profile"
 
@@ -59,10 +61,8 @@ if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
     /usr/bin/cat "$homedir/.ssh/id_ed25519.pub" > "$homedir/.ssh/authorized_keys"
     {
         echo "Host *"
-        echo " IgnoreUnknown UseKeychain"
         echo " AddKeysToAgent yes"
         echo " ForwardAgent yes"
-        echo " UseKeychain yes"
         echo " IdentityFile $homedir/.ssh/id_ed25519"
     } >> "$homedir/.ssh/config"
 fi
@@ -73,9 +73,9 @@ chmod 600 "$homedir/.ssh/config"
 chmod 600 "$homedir/.ssh/authorized_keys"
 chown "$userid":"$userid"  -R "$homedir/.ssh"
 
-# make devboxes
-mkdir -p "$homedir/devbox/.devcontainer"
+# make containers
+mkdir -p "$homedir/containers/.devcontainer"
 chown "$userid":"$userid"  -R "$homedir/devbox"
-if [ ! -f "$homedir/devbox/.devcontainer/devcontainer.json" ]; then
-    /usr/bin/wget -O  "$homedir/devbox/.devcontainer/devcontainer.json" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
+if [ ! -f "$homedir/containers/.devcontainer/devcontainer.json" ]; then
+    /usr/bin/wget -O  "$homedir/containers/.devcontainer/devcontainer.json" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
 fi

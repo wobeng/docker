@@ -3,17 +3,34 @@
 set -e
 
 # update the system and install packages
-sudo yum update -y && sudo yum install -y rsync jq amazon-efs-utils git zip unzip sssd sssd-tools sssd-ldap openldap-clients rsync
+sudo yum remove -y awscli
+sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip sssd sssd-tools sssd-ldap openldap-clients rsync
 
 # set up python
 python3  --version
 python3 -m pip install botocore
+python3 -m pip uninstall awscli
+
+# set up node
+curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+sudo yum install -y nodejs
+node --version
+npm config set strict-ssl false
+npm config set unsafe-perm=true
+sudo npm install -g @angular/cli > /dev/null
+sudo npm install -g angular-gettext-cli
+sudo npm install -g @bartholomej/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
+
+# set aws cli
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip -o awscliv2.zip
+sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
 
 # start ssm
 sudo systemctl enable amazon-ssm-agent
 sudo systemctl start amazon-ssm-agent
 
-# mount efs
+# mount efs root
 if ! grep -qxF "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
 
@@ -25,6 +42,16 @@ then
     sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 fi
 
+# mount efs workspaces
+if ! grep -qxF "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
+then
+
+    sudo mkdir -p /efs/workspaces
+    sudo mkdir -p /workspaces
+    chmod 700 /workspaces
+    mount -t efs -o tls,iam "$EFS_ID":/workspaces /workspaces
+    echo "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+fi
 
 # Install docker and mount docker volumes to efs
 if ! grep -qxF "$EFS_ID:/docker/volumes /var/lib/docker/volumes efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
@@ -46,11 +73,13 @@ fi
 
 # add user script
 sudo mkdir -p /etc/pam_scripts
-wget -O  /etc/pam_scripts/login-logger.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/login.sh
+wget -O  /etc/pam_scripts/login-logger.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/login.sh
+wget -O  /etc/pam_scripts/auth_keys.sh https://raw.githubusercontent.com/wobeng/docker/master/devboxes/bash_scripts/auth_keys.sh
 sed -i "s/EFS_ID/$EFS_ID/g" /etc/pam_scripts/login-logger.sh
 
 sudo chmod 755 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
+sudo chmod ugo+x /etc/pam_scripts/auth_keys.sh
 sudo chmod ugo+x /etc/pam_scripts/login-logger.sh
 
 sudo grep -qxF "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
@@ -82,6 +111,7 @@ sudo chmod 600 /etc/sssd/sssd.conf /etc/sssd/ldap/*
 sudo restorecon -FRv /etc/sssd
 
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo sed -i 's,AuthorizedKeysCommand /opt/aws/bin/eic_run_authorized_keys %u %f,AuthorizedKeysCommand /etc/pam_scripts/auth_keys.sh,g' /etc/ssh/sshd_config
 
 sudo systemctl enable sssd
 sudo systemctl restart sssd
