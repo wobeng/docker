@@ -16,7 +16,7 @@ if [ ! -f "$HOME/.config/vscode-dev-containers/workspace-one-time-startup-succes
     echo "IS_LOCAL=true" >> $USER_WORKSPACE/configs/envs/dev
 
     # set up virenv and packages
-   python -m venv $USER_WORKSPACE/configs/virenv
+   python3 -m venv $USER_WORKSPACE/configs/virenv
    $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pip
    $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pylint
    $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade autopep8
