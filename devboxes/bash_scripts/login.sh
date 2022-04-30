@@ -76,7 +76,7 @@ chown "$userid":"$userid"  -R "$homedir/.ssh"
 
 # make containers
 mkdir -p "$homedir/containers/.devcontainer"
-chown "$userid":"$userid"  -R "$homedir/devbox"
+chown "$userid":"$userid"  -R "$homedir/containers"
 if [ ! -f "$homedir/containers/.devcontainer/devcontainer.json" ]; then
     /usr/bin/wget -O  "$homedir/containers/.devcontainer/devcontainer.json" https://raw.githubusercontent.com/wobeng/docker/master/devboxes/devcontainer.json
 fi
