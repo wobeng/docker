@@ -7,4 +7,4 @@ if [ -f "$efshomedir/.ssh/id_ed25519.pub"  ]; then
     exit 0
 fi
 
-./opt/aws/bin/eic_run_authorized_keys "$@"
+/usr/bin/timeout 5s "/opt/aws/bin/eic_run_authorized_keys" "$@"
