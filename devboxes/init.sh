@@ -75,6 +75,8 @@ mv /tmp/docker-master/devboxes/user_scripts/setup.sh /usr/local/bin/setup.sh
 mv /tmp/docker-master/devboxes/user_scripts/sso.sh /usr/local/bin/sso.sh
 mv /tmp/docker-master/devboxes/user_scripts/startup.sh /usr/local/bin/workspace-one-time-startup.sh
 
+sed -i "s/EFS_ID/$EFS_ID/g" /etc/pam_scripts/login-logger.sh
+
 sudo chmod 755 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
 sudo chmod ugo+x -R /etc/pam_scripts
