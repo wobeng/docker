@@ -30,8 +30,8 @@ then
     /usr/sbin/usermod -aG docker $PAM_USER
 
     # create workspace
-    mkdir -p "/workspaces/$fulldomain/$PAM_USER"
-    chmod 700 "/workspaces/$fulldomain/$PAM_USER"
+    mkdir -p "/workspaces/$fulldomain/$username"
+    chmod 700 "/workspaces/$fulldomain/$username"
     chown "$PAM_USER":"$PAM_USER" -R "/workspaces/$fulldomain/$username"
 
     # add envs
@@ -40,7 +40,7 @@ then
     echo "export USER_DOMAIN=$domain" >> "$homedir/.bashrc"
     echo "export USER_FULLDOMAIN=$fulldomain" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
-    echo "export USER_WORKSPACE=/workspaces/$fulldomain/$PAM_USER" >> "$homedir/.bashrc"
+    echo "export USER_WORKSPACE=/workspaces/$fulldomain/$username" >> "$homedir/.bashrc"
 
 
     # auto start ssh agent
