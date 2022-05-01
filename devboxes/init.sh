@@ -6,6 +6,12 @@ set -e
 sudo yum remove -y awscli
 sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip sssd sssd-tools sssd-ldap openldap-clients rsync
 
+# install lamp
+sudo yum install -y httpd
+sudo amazon-linux-extras install -y  php7.2
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
 # set up python
 python3  --version
 python3 -m pip install botocore
