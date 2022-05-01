@@ -37,6 +37,7 @@ then
     # add envs
     touch "$homedir/.bashrc"
     echo "export USER_ID=$userid" >> "$homedir/.bashrc"
+    echo "export USER_NAME=$username" >> "$homedir/.bashrc"
     echo "export USER_DOMAIN=$domain" >> "$homedir/.bashrc"
     echo "export USER_FULLDOMAIN=$fulldomain" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
@@ -80,10 +81,3 @@ chmod 700 "$homedir/.ssh"
 chmod 600 "$homedir/.ssh/config"
 chmod 600 "$homedir/.ssh/authorized_keys"
 chown "$PAM_USER":"$PAM_USER"  -R "$homedir/.ssh"
-
-# make containers
-mkdir -p "$homedir/containers/.devcontainer"
-chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
-if [ ! -f "$homedir/containers/.devcontainer/devcontainer.json" ]; then
-    /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$homedir/containers/.devcontainer/devcontainer.json"
-fi

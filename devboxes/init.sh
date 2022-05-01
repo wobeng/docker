@@ -114,6 +114,7 @@ sudo chown 0:0 /etc/sssd/sssd.conf /etc/sssd/ldap/*
 sudo chmod 600 /etc/sssd/sssd.conf /etc/sssd/ldap/*
 sudo restorecon -FRv /etc/sssd
 
+sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's,AuthorizedKeysCommandUser ec2-instance-connect,AuthorizedKeysCommandUser root,g' /etc/ssh/sshd_config
 sudo sed -i 's,AuthorizedKeysCommand /opt/aws/bin/eic_run_authorized_keys %u %f,AuthorizedKeysCommand /bin/sh /etc/pam_scripts/auth_keys.sh %u %f %h,g' /etc/ssh/sshd_config
