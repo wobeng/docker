@@ -32,7 +32,7 @@ then
     # create workspace
     mkdir -p "/workspaces/$fulldomain/$PAM_USER"
     chmod 700 "/workspaces/$fulldomain/$PAM_USER"
-    chown "$userid":"$userid" -R "/workspaces/$fulldomain/$PAM_USER"
+    chown "$PAM_USER":"$PAM_USER" -R "/workspaces/$fulldomain/$username"
 
     # add envs
     touch "$homedir/.bashrc"
@@ -54,7 +54,7 @@ then
     # mount
     mkdir -p "$efshomedir"
     /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homedir/ $efshomedir/
-    chown "$userid":"$userid" -R "$efshomedir"
+    chown "$PAM_USER":"$PAM_USER" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
@@ -79,11 +79,11 @@ fi
 chmod 700 "$homedir/.ssh"
 chmod 600 "$homedir/.ssh/config"
 chmod 600 "$homedir/.ssh/authorized_keys"
-chown "$userid":"$userid"  -R "$homedir/.ssh"
+chown "$PAM_USER":"$PAM_USER"  -R "$homedir/.ssh"
 
 # make containers
 mkdir -p "$homedir/containers/.devcontainer"
-chown "$userid":"$userid"  -R "$homedir/containers"
+chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
 if [ ! -f "$homedir/containers/.devcontainer/devcontainer.json" ]; then
     /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$homedir/containers/.devcontainer/devcontainer.json"
 fi

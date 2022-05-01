@@ -1,10 +1,6 @@
 #! /bin/bash
 
-if [ -z "$BASH_VERSION" ]
-then
-    exec bash "$0" "$@"
-fi
-
+set -e
 
 script_folder="$1"
 
@@ -21,6 +17,12 @@ add-aws-config()
       sso_start_name=`jq -r '.aws_roles['$i'].sso_start_name // empty' main.code-workspace`
       sso_role_name=`jq -r '.aws_roles['$i'].sso_role_name // empty' main.code-workspace`
       sso_account_id=`jq -r '.aws_roles['$i'].sso_account_id // empty' main.code-workspace`
+      
+      if grep -qxF "[profile $profile]" ~/.aws/config
+      then
+        continue
+      fi
+      
       {
           echo "[profile $profile]"
       } >> ~/.aws/config

@@ -1,7 +1,9 @@
 #! /bin/bash
 
+set -e
+
 # Run workspace-one-time-setup if configured and terminal is interactive
-if [ ! -f "$HOME/.config/vscode-dev-containers/workspace-one-time-startup-success" ]; then
+if [ ! -f "$USER_WORKSPACE/configs/installs/workspace-one-time-startup-success" ]; then
 
     mkdir -p "$USER_WORKSPACE/repos"
     mkdir -p "$HOME/.aws"
@@ -27,6 +29,6 @@ if [ ! -f "$HOME/.config/vscode-dev-containers/workspace-one-time-startup-succes
    $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pre-commit
 
 
-    mkdir -p "$HOME/.config/vscode-dev-containers"
-    touch "$HOME/.config/vscode-dev-containers/workspace-one-time-startup-success"
+    mkdir -p "$USER_WORKSPACE/configs/installs"
+    touch "$USER_WORKSPACE/configs/installs/workspace-one-time-startup-success"
 fi

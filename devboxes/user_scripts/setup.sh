@@ -1,9 +1,6 @@
 #! /bin/bash
 
-if [ -z "$BASH_VERSION" ]
-then
-    exec bash "$0" "$@"
-fi
+set -e
 
 script_folder="$1"
 repos_folder="$USER_WORKSPACE/repos"
@@ -40,7 +37,7 @@ install-requires()
 if [ -f "${script_folder}/main.code-workspace" ]; then
 
   # clone repos
-  for i in $(jq -cr '.folders[] | (.repo) // empty' main.code-workspace); do
+  for i in $(jq -cr '.folders[] | (.repo) // empty' "${script_folder}/main.code-workspace"); do
        if [ ! -z "$i" ]; then
         clone-repo "$i"
       fi
