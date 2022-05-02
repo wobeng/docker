@@ -12,6 +12,11 @@ sudo amazon-linux-extras install php7.2 -y
 sudo systemctl start httpd
 sudo systemctl enable httpd
 
+# install terraform
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
 # set up python
 python3  --version
 python3 -m pip install botocore
