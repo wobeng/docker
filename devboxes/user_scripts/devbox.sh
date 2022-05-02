@@ -4,6 +4,9 @@ repo_name=$2
 folder=$(echo $repo_name | cut -d/ -f2)
 target="$USER_WORKSPACE/repos/$folder"
 
+echo "==================== START DEVBOX ===================="
+echo ""
+echo ""
 man () {
      echo "Oops, Something went wrong"
      echo "Command format: devbox setup <org>/<username>"
@@ -12,10 +15,10 @@ man () {
 }
 
 open_target() {
-    if [ -f "$target/main.code-workspace" ]; then
-    code "$target/main.code-workspace"
+    if [ -f "$target/$folder.code-workspace" ]; then
+    code "$target/$folder.code-workspace"
   else
-      code -r $target
+      code $target
   fi
   exit 0
 }
@@ -26,17 +29,13 @@ if [ -z "$repo_name" ]; then
 fi
 
 
-if [ -d  "$target" ] ; then
+if [ ! -d  "$target" ] ; then
 
-    echo "$folder already exist, skip cloning..."
-
-else
-
-    git clone "git@github.com:$repo_name.git" "$target" > /dev/null 2>&1
-    prev_exit="${?}"
-    if [ "${prev_exit}" -ne 0 ] ; then
-      man 
-    fi
+  git clone "git@github.com:$repo_name.git" "$target" > /dev/null 2>&1
+  prev_exit="${?}"
+  if [ "${prev_exit}" -ne 0 ] ; then
+    man 
+  fi
 
 fi
 
@@ -46,5 +45,9 @@ set -e
 /usr/local/bin/sso.sh "$target"
 # clone and install requirements
 /usr/local/bin/setup.sh "$target"
+echo ""
+echo ""
+echo "==================== END DEVBOX ======================"
 
 open_target
+

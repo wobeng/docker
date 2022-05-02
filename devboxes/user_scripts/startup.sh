@@ -12,9 +12,8 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
 
     ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
 
-    touch $USER_WORKSPACE/configs/aws/config
-    touch $USER_WORKSPACE/configs/envs/dev
 
+    touch $USER_WORKSPACE/configs/envs/dev
     echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev
     echo "IS_LOCAL=true" >> $USER_WORKSPACE/configs/envs/dev
 
