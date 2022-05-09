@@ -8,7 +8,7 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
     mkdir -p "$USER_WORKSPACE/repos"
     mkdir -p "$USER_WORKSPACE/configs/envs"
     ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
-
+    ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
 
     touch $USER_WORKSPACE/configs/envs/dev
     echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev

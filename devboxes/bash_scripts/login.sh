@@ -34,6 +34,7 @@ then
 
     # create workspace
     mkdir -p "$homedir/.aws"
+    mkdir -p "$homedir/.gcloud"
     mkdir -p "$homedir/containers/.devcontainer"
     chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
 
