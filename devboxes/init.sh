@@ -134,6 +134,3 @@ sudo sed -i 's,AuthorizedKeysCommand /opt/aws/bin/eic_run_authorized_keys %u %f,
 sudo systemctl enable sssd
 sudo systemctl restart sssd
 sudo systemctl restart sshd
-
-shutdown --reboot 1 "System rebooting in 1 minute"
-sleep 90

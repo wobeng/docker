@@ -9,7 +9,7 @@ fi
 
 
 if [ ! -n "$PAM_USER" ]; then
-  echo "Please set $PAM_USER"
+  echo "Please set \$PAM_USER"
   exit 0
 fi
 
