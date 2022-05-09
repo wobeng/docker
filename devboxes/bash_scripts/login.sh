@@ -28,7 +28,15 @@ then
     # add user to docker group
     /usr/sbin/usermod -aG docker $username
 
+    # set git config
+    git config --global user.name "$username"
+    git config --global user.email "$PAM_USER"
+
     # create workspace
+    mkdir -p "$homedir/.aws"
+    mkdir -p "$homedir/containers/.devcontainer"
+    chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
+
     mkdir -p "/workspaces/$fulldomain/$username"
     chmod 700 "/workspaces/$fulldomain/$username"
     chown "$PAM_USER":"$PAM_USER" "/workspaces/$fulldomain/$username"
@@ -73,6 +81,7 @@ if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
         echo " ForwardAgent yes"
         echo " IdentityFile $homedir/.ssh/id_ed25519"
     } >> "$homedir/.ssh/config"
+
 fi
 
 # make sure user can always login
