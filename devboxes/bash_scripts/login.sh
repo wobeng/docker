@@ -26,7 +26,7 @@ if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam
 then
 
     # add user to docker group
-    /usr/sbin/usermod -aG docker $PAM_USER
+    /usr/sbin/usermod -aG docker $username
 
     # create workspace
     mkdir -p "/workspaces/$fulldomain/$username"
