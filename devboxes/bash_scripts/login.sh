@@ -26,13 +26,12 @@ if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam
 then
 
     # add user to docker group
-    /usr/sbin/usermod -aG docker $username
     /usr/sbin/usermod -aG docker $PAM_USER
 
     # create workspace
     mkdir -p "/workspaces/$fulldomain/$username"
     chmod 700 "/workspaces/$fulldomain/$username"
-    chown "$PAM_USER":"$PAM_USER" -R "/workspaces/$fulldomain/$username"
+    chown "$PAM_USER":"$PAM_USER" "/workspaces/$fulldomain/$username"
 
     # add envs
     touch "$homedir/.bashrc"
