@@ -2,14 +2,15 @@
 
 set -e
 
+mkdir -p "$HOME/.aws"
+mkdir -p "$HOME/containers/.devcontainer"
+chown "$USER_EMAIL":"$USER_EMAIL"  -R "$HOME/containers"
 
 # Run workspace-one-time-setup if configured and terminal is interactive
 if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_success" ]; then
 
     mkdir -p "$USER_WORKSPACE/repos"
-    mkdir -p "$HOME/.aws"
     mkdir -p "$USER_WORKSPACE/configs/envs"
-
     ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
 
 
@@ -38,8 +39,6 @@ fi
 
 
 # make containers
-mkdir -p "$HOME/containers/.devcontainer"
-chown "$USER_EMAIL":"$USER_EMAIL"  -R "$HOME/containers"
 if [ ! -f "$HOME/containers/.devcontainer/devcontainer.json" ]; then
     /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$HOME/containers/.devcontainer/devcontainer.json"
 fi
