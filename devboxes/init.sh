@@ -49,9 +49,10 @@ then
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
     
-    #ensure all ssh keys are the same
-    sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 fi
+
+#ensure all ssh keys are the same
+sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
 
 # mount efs workspaces
 if ! grep -qxF "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
