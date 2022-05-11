@@ -29,8 +29,10 @@ then
     /usr/sbin/usermod -aG docker $username
 
     # set git config
-    /usr/bin/git config --global user.name "$username"
-    /usr/bin/git config --global user.email "$PAM_USER"
+    touch "$homedir/.gitconfig"
+    echo "[user]" >> "$homedir/.gitconfig"
+    echo "      name = $username" >> "$homedir/.gitconfig"
+    echo "      email = $PAM_USER" >> "$homedir/.gitconfig"
 
     # create workspace
     mkdir -p "$homedir/.aws"
