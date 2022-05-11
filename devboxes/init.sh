@@ -104,8 +104,8 @@ sudo grep -qxF "session optional pam_exec.so seteuid /etc/pam_scripts/login-logg
 
 # join to domain
 sudo install -d --mode=700 --owner=sssd --group=root /etc/sssd/ldap
-GOOGLE_LDAP_CRT=$(aws ssm get-parameter --name GOOGLE_LDAP_CRT --with-decryption --region us-east-1 | jq -r .Parameter.Value)
-GOOGLE_LDAP_KEY=$(aws ssm get-parameter --name GOOGLE_LDAP_KEY --with-decryption --region us-east-1 | jq -r .Parameter.Value) 
+GOOGLE_LDAP_CRT=$(/usr/local/bin/aws ssm get-parameter --name GOOGLE_LDAP_CRT --with-decryption --region us-east-1 | jq -r .Parameter.Value)
+GOOGLE_LDAP_KEY=$(/usr/local/bin/aws ssm get-parameter --name GOOGLE_LDAP_KEY --with-decryption --region us-east-1 | jq -r .Parameter.Value) 
 echo -e "${GOOGLE_LDAP_CRT}" >> /etc/sssd/ldap/google.crt
 echo -e "${GOOGLE_LDAP_KEY}" >> /etc/sssd/ldap/google.key
 sudo chmod 600 /etc/sssd/ldap/google.crt
