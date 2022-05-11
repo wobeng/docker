@@ -76,6 +76,7 @@ sudo mkdir -p /etc/pam_scripts
 sudo mkdir -p /var/log/exported
 chmod 777 /var/log/exported
 
+rm -rf /tmp/docker-master
 curl -L "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
 unzip /tmp/master.zip -d /tmp
 
