@@ -6,16 +6,26 @@ set -e
 sudo yum remove -y awscli
 sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip sssd sssd-tools sssd-ldap openldap-clients rsync
 
+# start ssm
+sudo systemctl restart amazon-ssm-agent
+sudo systemctl enable amazon-ssm-agent
+
 # install lamp
 sudo yum install -y httpd
 sudo amazon-linux-extras install php7.2 -y
-sudo systemctl start httpd
+sudo systemctl restart httpd
 sudo systemctl enable httpd
 
 # install terraform
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
 sudo yum -y install terraform
+
+# Install docker
+sudo amazon-linux-extras install docker -y
+sudo systemctl restart docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user  
 
 # set up python
 python3  --version
@@ -36,10 +46,6 @@ sudo npm install -g @bartholomej/ngx-translate-extract @angular/compiler typescr
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip -o awscliv2.zip
 sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-
-# start ssm
-sudo systemctl enable amazon-ssm-agent
-sudo systemctl start amazon-ssm-agent
 
 # mount efs root
 if ! grep -qxF "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
@@ -64,12 +70,7 @@ then
     mount -t efs -o tls,iam "$EFS_ID":/workspaces /workspaces
     echo "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 fi
-
-# Install docker and mount docker volumes to efs
-sudo amazon-linux-extras install docker -y
-sudo systemctl enable docker
-sudo systemctl restart docker
-sudo usermod -aG docker ec2-user   
+ 
 
 # add user script
 sudo mkdir -p /etc/pam_scripts
