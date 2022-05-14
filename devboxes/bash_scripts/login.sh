@@ -18,7 +18,7 @@ username=$(/usr/bin/echo $PAM_USER | cut -d@ -f1)
 domain=$(/usr/bin/echo $PAM_USER | cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  $PAM_USER | cut -d@ -f2)
 userid=$(/usr/bin/id -u $PAM_USER)
-homedir="/home/$PAM_USER"
+homedir=$(/usr/bin/getent passwd $PAM_USER | cut -d: -f6)
 efshomedir="/efs$homedir"
 
 # mount user efs and first time process
