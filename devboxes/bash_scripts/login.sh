@@ -35,14 +35,14 @@ then
     echo "      email = $PAM_USER" >> "$homedir/.gitconfig"
 
     # create workspace
-    mkdir -p "$homedir/.aws"
-    mkdir -p "$homedir/.gcloud"
-    mkdir -p "$homedir/containers/.devcontainer"
-    chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
+    /usr/bin/mkdir -p "$homedir/.aws"
+    /usr/bin/mkdir -p "$homedir/.gcloud"
+    /usr/bin/mkdir -p "$homedir/containers/.devcontainer"
+    /usr/bin/chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
 
-    mkdir -p "/workspaces/$PAM_USER"
+    /usr/bin/mkdir -p "/workspaces/$PAM_USER"
     chmod 700 "/workspaces/$PAM_USER"
-    chown "$PAM_USER":"$PAM_USER" "/workspaces/$PAM_USER"
+    /usr/bin/chown "$PAM_USER":"$PAM_USER" "/workspaces/$PAM_USER"
 
     # add envs
     touch "$homedir/.bashrc"
@@ -63,9 +63,9 @@ then
     echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homedir/.bash_profile"
 
     # mount
-    mkdir -p "$efshomedir"
+    /usr/bin/mkdir -p "$efshomedir"
     /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homedir/ $efshomedir/
-    chown "$PAM_USER":"$PAM_USER" -R "$efshomedir"
+    /usr/bin/chown "$PAM_USER":"$PAM_USER" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
@@ -73,7 +73,7 @@ fi
 
 # make sure there is a ssh key
 if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
-    mkdir -p "$homedir/.ssh"
+    /usr/bin/mkdir -p "$homedir/.ssh"
     touch "$homedir/.ssh/config"
     touch "$homedir/.ssh/authorized_keys"
     /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/id_ed25519" -C "$PAM_USER" <<<y >/dev/null 2>&1
@@ -91,4 +91,4 @@ fi
 chmod 700 "$homedir/.ssh"
 chmod 600 "$homedir/.ssh/config"
 chmod 600 "$homedir/.ssh/authorized_keys"
-chown "$PAM_USER":"$PAM_USER"  -R "$homedir/.ssh"
+/usr/bin/chown "$PAM_USER":"$PAM_USER"  -R "$homedir/.ssh"
