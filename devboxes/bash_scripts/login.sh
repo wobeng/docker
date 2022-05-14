@@ -26,7 +26,7 @@ if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam
 then
 
     # add user to docker group
-    /usr/sbin/usermod -aG docker $username
+    /usr/sbin/usermod -aG docker $PAM_USER
 
     # set git config
     touch "$homedir/.gitconfig"
@@ -40,9 +40,9 @@ then
     mkdir -p "$homedir/containers/.devcontainer"
     chown "$PAM_USER":"$PAM_USER"  -R "$homedir/containers"
 
-    mkdir -p "/workspaces/$fulldomain/$username"
-    chmod 700 "/workspaces/$fulldomain/$username"
-    chown "$PAM_USER":"$PAM_USER" "/workspaces/$fulldomain/$username"
+    mkdir -p "/workspaces/$PAM_USER"
+    chmod 700 "/workspaces/$PAM_USER"
+    chown "$PAM_USER":"$PAM_USER" "/workspaces/$PAM_USER"
 
     # add envs
     touch "$homedir/.bashrc"
@@ -51,7 +51,7 @@ then
     echo "export USER_DOMAIN=$domain" >> "$homedir/.bashrc"
     echo "export USER_FULLDOMAIN=$fulldomain" >> "$homedir/.bashrc"
     echo "export USER_EMAIL=$PAM_USER" >> "$homedir/.bashrc"
-    echo "export USER_WORKSPACE=/workspaces/$fulldomain/$username" >> "$homedir/.bashrc"
+    echo "export USER_WORKSPACE=/workspaces/$PAM_USER" >> "$homedir/.bashrc"
 
 
     # auto start ssh agent
