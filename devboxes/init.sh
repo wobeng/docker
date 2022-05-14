@@ -116,7 +116,7 @@ sudo chmod 600 /etc/sssd/ldap/google.key
 
 mv /tmp/docker-master/devboxes/sssd.conf  /etc/sssd/sssd.conf
 sed -i "s/SSSD_DOMAINS/$SSSD_DOMAINS/g" /etc/sssd/sssd.conf
-sed -i "s/SSSD_DOMAIN/$SSSD_DOMAIN1/g" /etc/sssd/sssd.conf
+sed -i "s/SSSD_DOMAIN/$SSSD_DOMAIN/g" /etc/sssd/sssd.conf
 sed -i "s/SSSD_SEARCH_BASE/$SSSD_SEARCH_BASE1/g" /etc/sssd/sssd.conf
 
 sudo authconfig --enablesssd --enablesssdauth --enablemkhomedir --updateall
