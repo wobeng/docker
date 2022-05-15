@@ -102,7 +102,7 @@ sudo chmod ugo+x /usr/local/bin/sso.sh
 sudo chmod ugo+x /usr/local/bin/setup.sh
 sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 
-sudo grep -qxF "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
+sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
 
 
 # join to domain
