@@ -4,7 +4,7 @@ set -e
 
 # update the system and install packages
 sudo yum remove -y awscli
-sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip sssd sssd-tools sssd-ldap openldap-clients rsync
+sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
 
 # start ssm
 sudo systemctl restart amazon-ssm-agent
@@ -104,37 +104,9 @@ sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 
 sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
 
-
-# join to domain
-sudo install -d --mode=700 --owner=sssd --group=root /etc/sssd/ldap
-GOOGLE_LDAP_CRT=$(/usr/local/bin/aws ssm get-parameter --name GOOGLE_LDAP_CRT --with-decryption --region us-east-1 | jq -r .Parameter.Value)
-GOOGLE_LDAP_KEY=$(/usr/local/bin/aws ssm get-parameter --name GOOGLE_LDAP_KEY --with-decryption --region us-east-1 | jq -r .Parameter.Value) 
-echo -e "${GOOGLE_LDAP_CRT}" >> /etc/sssd/ldap/google.crt
-echo -e "${GOOGLE_LDAP_KEY}" >> /etc/sssd/ldap/google.key
-sudo chmod 600 /etc/sssd/ldap/google.crt
-sudo chmod 600 /etc/sssd/ldap/google.key
-
-mv /tmp/docker-master/devboxes/sssd.conf  /etc/sssd/sssd.conf
-sed -i "s/SSSD_DOMAINS/$SSSD_DOMAINS/g" /etc/sssd/sssd.conf
-sed -i "s/SSSD_DOMAIN1/$SSSD_DOMAIN1/g" /etc/sssd/sssd.conf
-sed -i "s/SSSD_SEARCH_BASE1/$SSSD_SEARCH_BASE1/g" /etc/sssd/sssd.conf
-sed -i "s/SSSD_DOMAIN2/$SSSD_DOMAIN2/g" /etc/sssd/sssd.conf
-sed -i "s/SSSD_SEARCH_BASE2/$SSSD_SEARCH_BASE2/g" /etc/sssd/sssd.conf
-
-sudo authconfig --enablesssd --enablesssdauth --enablemkhomedir --updateall
-
-sudo grep -qxF "sudoers:    files sss" /etc/nsswitch.conf || echo "sudoers:    files sss" >> /etc/nsswitch.conf
-
-sudo chmod 600 /etc/sssd/sssd.conf
-sudo chown 0:0 /etc/sssd/sssd.conf /etc/sssd/ldap/*
-sudo chmod 600 /etc/sssd/sssd.conf /etc/sssd/ldap/*
-sudo restorecon -FRv /etc/sssd
-
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's,AuthorizedKeysCommandUser ec2-instance-connect,AuthorizedKeysCommandUser root,g' /etc/ssh/sshd_config
 sudo sed -i 's,AuthorizedKeysCommand /opt/aws/bin/eic_run_authorized_keys %u %f,AuthorizedKeysCommand /bin/sh /etc/pam_scripts/auth_keys.sh %u %f %h,g' /etc/ssh/sshd_config
 
-sudo systemctl enable sssd
-sudo systemctl restart sssd
 sudo systemctl restart sshd
