@@ -38,7 +38,7 @@ do
             loginUsername="$domain-$username"
 
             if [[ ! -f "$hashCodePath" ]]; then
-                useradd $loginUsername
+                /usr/sbin/adduser $loginUsername
                 touch "$hashCodePath"
                 echo "======================="
             fi

@@ -13,11 +13,6 @@ if [ ! -n "$PAM_USER" ]; then
   exit 0
 fi
 
-# We create an account if the home directory doesn't already exist
-if [[ "${PAM_TYPE}" == "open_session" ]] && [ ! -d "/home/${PAM_USER}" ]; then
-  useradd -m ${PAM_USER}
-fi
-
 username=$(/usr/bin/echo $PAM_USER | cut -d@ -f1)
 domain=$(/usr/bin/echo $PAM_USER | cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  $PAM_USER | cut -d@ -f2)
