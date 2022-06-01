@@ -38,8 +38,9 @@ do
             loginUsername="$domain-$username"
 
             if [[ ! -f "$hashCodePath" ]]; then
-                useradd "$loginUsername"  || echo "======================="
+                useradd $loginUsername
                 touch "$hashCodePath"
+                echo "======================="
             fi
         done
 
