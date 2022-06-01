@@ -32,4 +32,4 @@ if [ $? -ne 0 ]; then
 fi
 
 
-/usr/bin/cat "$pubkey"
+/usr/bin/echo "$pubkey"
