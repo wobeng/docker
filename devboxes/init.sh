@@ -106,9 +106,9 @@ sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
 
 # add cron scripts
-crontab -l > users
-echo "*/5 * * * * /etc/pam_scripts/users.sh" >> users
-crontab  users
+touch /var/spool/cron/root
+/usr/bin/crontab /var/spool/cron/root
+echo "*/5 * * * * /etc/pam_scripts/users.sh" >> /var/spool/cron/root
 
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
