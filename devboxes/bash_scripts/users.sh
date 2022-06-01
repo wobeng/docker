@@ -3,13 +3,10 @@ set -e
 
 allowedDomains="DOMAINS"
 
-for item in ${allowedDomains//,/ }
+for domain in ${allowedDomains//,/ }
 do
 
-        domain=$(/usr/bin/echo ${item}| cut -d. -f1 | cut -d@ -f2)
-        fulldomain=$(/usr/bin/echo  ${item} | cut -d@ -f2)
-
-        stateUrl="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
+        stateUrl="https://s3.amazonaws.com/public-gws-aws.$domain"
 
         statePath="/etc/pam_scripts/users/$domain-state.json"
         userStatePath="/etc/pam_scripts/users/$domain-users.json"
@@ -38,7 +35,7 @@ do
             hashCodePath="/etc/pam_scripts/users/$hashCode.txt"
 
             username=$(/usr/bin/echo $email | cut -d@ -f1)
-            loginUsername="$username-$domain"
+            loginUsername="$domain-$username"
 
             if [[ ! -f "$hashCodePath" ]]; then
                 useradd "$loginUsername"  || echo "======================="

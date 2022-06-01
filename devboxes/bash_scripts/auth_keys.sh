@@ -1,11 +1,11 @@
 #!/bin/sh
 set -e
 
-domain=$(/usr/bin/echo ${1}| cut -d. -f1 | cut -d@ -f2)
-fulldomain=$(/usr/bin/echo  ${1} | cut -d@ -f2)
+domain=$(/usr/bin/echo ${1}| cut -d- -f1)
+username=$(/usr/bin/echo ${1}| cut -d- -f2)
 
 statePath="/etc/pam_scripts/users/$domain-state.json"
-stateUrl="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
+stateUrl="https://s3.amazonaws.com/public-gws-aws.$domain"
 
 
 datetime=$(jq -r .lastSync $statePath)
@@ -25,7 +25,7 @@ if [ $dtSec -lt $taSec  ]; then
 fi
 
 
-pubkey=$(curl --fail-with-body -s $stateUrl/users/keys/${1}.pub)
+pubkey=$(curl --fail-with-body -s $stateUrl/users/keys/${username}.pub)
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit 1

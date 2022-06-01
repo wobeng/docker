@@ -75,7 +75,7 @@ fi
  
 
 # add user script
-sudo mkdir -p /etc/pam_scripts
+sudo mkdir -p /etc/pam_scripts/users
 sudo mkdir -p /var/log/exported
 chmod 777 /var/log/exported
 
