@@ -1,12 +1,14 @@
 #!/bin/sh
 set -e
 
-username=$(/usr/bin/echo ${1} | cut -d@ -f1)
+domain=$(/usr/bin/echo ${1}| cut -d. -f1 | cut -d@ -f2)
 fulldomain=$(/usr/bin/echo  ${1} | cut -d@ -f2)
-url="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
+
+statePath="/etc/pam_scripts/users/$domain-state.json"
+stateUrl="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
 
 
-datetime=$(curl --fail-with-body -s $url/data/state.json | jq -r '.lastSync')
+datetime=$(jq -r .lastSync $statePath)
 
 if [ $? -ne 0 ]; then
     /usr/bin/timeout 5s "/opt/aws/bin/eic_run_authorized_keys" "$@" 
@@ -23,7 +25,7 @@ if [ $dtSec -lt $taSec  ]; then
 fi
 
 
-pubkey=$(curl --fail-with-body -s $url/users/keys/$username.pub)
+pubkey=$(curl --fail-with-body -s $stateUrl/users/keys/${1}.pub)
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit 1

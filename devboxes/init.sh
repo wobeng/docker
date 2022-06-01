@@ -85,6 +85,7 @@ unzip /tmp/master.zip -d /tmp
 
 mv /tmp/docker-master/devboxes/bash_scripts/login.sh /etc/pam_scripts/login-logger.sh
 mv /tmp/docker-master/devboxes/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
+mv /tmp/docker-master/devboxes/bash_scripts/users.sh /etc/pam_scripts/users.sh
 
 mv /tmp/docker-master/devboxes/user_scripts/devbox.sh /usr/local/bin/devbox
 mv /tmp/docker-master/devboxes/user_scripts/setup.sh /usr/local/bin/setup.sh
@@ -103,6 +104,11 @@ sudo chmod ugo+x /usr/local/bin/setup.sh
 sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 
 sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
+
+# add cron scripts
+crontab -l > users
+echo "*/5 * * * * /etc/pam_scripts/users.sh" >> users
+crontab  users
 
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
