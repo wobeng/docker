@@ -1,7 +1,9 @@
  #!/bin/bash
 set -e
 
-for item in ${DOMAINS//,/ }
+allowedDomains="DOMAINS"
+
+for item in ${allowedDomains//,/ }
 do
 
         domain=$(/usr/bin/echo ${item}| cut -d. -f1 | cut -d@ -f2)
