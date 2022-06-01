@@ -9,21 +9,31 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
     mkdir -p "$USER_WORKSPACE/configs/envs"
     ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
     ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
-
     touch $USER_WORKSPACE/configs/envs/dev
-    echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev
-    echo "IS_LOCAL=true" >> $USER_WORKSPACE/configs/envs/dev
+    
+    if ! grep -qxF "ENVIRONMENT=develop" $USER_WORKSPACE/configs/envs/dev
+    then
+        echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev
+    fi
+    if ! grep -qxF "IS_LOCAL=true" $USER_WORKSPACE/configs/envs/dev
+    then
+        echo "IS_LOCAL=true" >> $USER_WORKSPACE/configs/envs/dev
+    fi
 
     # set up virenv and packages
-   python3 -m venv $USER_WORKSPACE/configs/virenv
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pip
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pylint
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade autopep8
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade black
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade isort
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade flake8
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pyflakes
-   $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pre-commit
+
+    if [ ! -d "$USER_WORKSPACE/configs/virenv" ]; then
+        python3 -m venv $USER_WORKSPACE/configs/virenv
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pip
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pylint
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade autopep8
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade black
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade isort
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade flake8
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pyflakes
+        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pre-commit
+
+    fi
 
 
     mkdir -p "$USER_WORKSPACE/configs/installs"

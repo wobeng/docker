@@ -35,12 +35,52 @@ do
             hashCodePath="/etc/pam_scripts/users/$hashCode.txt"
 
             username=$(/usr/bin/echo $email | cut -d@ -f1)
+            fulldomain=$(/usr/bin/echo  $email | cut -d@ -f2)
             loginUsername="$domain-$username"
+            homeDir="/home/$loginUsername"
 
+            rm -f "$homeDir/authorized_keys"
+            
             if [[ ! -f "$hashCodePath" ]]; then
+                # add user
                 /usr/sbin/adduser $loginUsername
+                # add user to docker group
+                /usr/sbin/usermod -aG docker $loginUsername
+
+                # set git config
+                touch "$homeDir/.gitconfig"
+                echo "[user]" >> "$homeDir/.gitconfig"
+                echo "      name = $username" >> "$homeDir/.gitconfig"
+                echo "      email = $email" >> "$homeDir/.gitconfig"
+
+                # create workspace
+                /usr/bin/mkdir -p "$homeDir/.aws"
+                /usr/bin/mkdir -p "$homeDir/.gcloud"
+                /usr/bin/mkdir -p "$homeDir/containers/.devcontainer"
+                /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir/containers"
+
+                /usr/bin/mkdir -p "/workspaces/$loginUsername"
+                chmod 700 "/workspaces/$loginUsername"
+                /usr/bin/chown "$loginUsername":"$loginUsername" "/workspaces/$loginUsername"
+
+                # add envs
+                touch "$homeDir/.bashrc"
+                echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
+                echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
+                echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
+                echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
+                echo "export USER_WORKSPACE=/workspaces/$loginUsername" >> "$homeDir/.bashrc"
+
+
+                # auto start ssh agent
+                echo "" >> "$homeDir/.bash_profile"
+                /usr/bin/cat "/tmp/docker-master/devboxes/bash_scripts/ssh_agent.sh" >> "$homeDir/.bash_profile"
+
+                # user start up script
+                echo "" >> "$homeDir/.bash_profile"
+                echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homeDir/.bash_profile"
+
                 touch "$hashCodePath"
-                echo "======================="
             fi
         done
 
