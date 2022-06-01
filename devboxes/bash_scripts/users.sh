@@ -42,10 +42,10 @@ do
             rm -f "$homeDir/authorized_keys"
             
             if [[ ! -f "$hashCodePath" ]]; then
-                # add user
-                /usr/sbin/adduser $loginUsername
+                # add user 
+                /usr/sbin/adduser $loginUsername || true
                 # add user to docker group
-                /usr/sbin/usermod -aG docker $loginUsername
+                /usr/sbin/usermod -aG docker $loginUsername || true
 
                 # set git config
                 touch "$homeDir/.gitconfig"
