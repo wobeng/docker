@@ -17,7 +17,7 @@ do
         curl $stateUrl/data/users.json -S -s -o $userStatePath
 
         # check if there is a difference
-        LocalLastSync=$(cat $lastSync || echo "")
+        LocalLastSync=$(touch $lastSync && cat $lastSync || echo "")
         RemoteLastSync=$(jq -r .lastSync $statePath)
 
         if [[ "${LocalLastSync}" != "" ]] ;then

@@ -43,3 +43,8 @@ if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
     } >> "$homedir/.ssh/config"
 
 fi
+
+# make sure user can always login
+chmod 700 "$homedir/.ssh"
+chmod 600 "$homedir/.ssh/config"
+/usr/bin/chown "$username":"$username"  -R "$homedir/.ssh"
