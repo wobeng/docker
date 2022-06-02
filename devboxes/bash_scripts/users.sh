@@ -48,8 +48,8 @@ do
             
             if [[ ! -f "$hashCodePath" ]]; then
                 # add user 
-                groupadd -g $uuid $loginUsername || true
-                useradd $loginUsername -u $uuid -g $uuid -m -s /bin/bash || true
+                /usr/sbin/groupadd -g $uuid $loginUsername || true
+                /usr/sbin/useradd $loginUsername -u $uuid -g $uuid -m -s /bin/bash || true
 
                 # add user to docker group
                 /usr/sbin/usermod -aG docker $loginUsername || true
