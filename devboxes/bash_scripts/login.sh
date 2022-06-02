@@ -15,25 +15,28 @@ fi
 
 username=$username
 homedir="/home/$username"
-efshomedir="/efs$homedir"
+workspacedir="/workspace/$username"
 
-# mount user efs and first time process
+# mount user efs home directory
 if ! /usr/bin/grep -qxF "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
-
     # mount
-    /usr/bin/mkdir -p "$efshomedir"
-    /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homedir/ $efshomedir/
-    /usr/bin/chown "$username":"$username" -R "$efshomedir"
     /usr/bin/mount -t efs -o tls,iam EFS_ID:"$homedir" "$homedir"
     echo "EFS_ID:$homedir $homedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
 
 fi
 
+# mount user efs workspace directory
+if ! /usr/bin/grep -qxF "EFS_ID:$workspacedir $workspacedir efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
+then
+    # mount
+    /usr/bin/mount -t efs -o tls,iam EFS_ID:"$workspacedir" "$workspacedir"
+    echo "EFS_ID:$workspacedir $workspacedir efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
+
+fi
+
 # make sure there is a ssh key
 if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
-    /usr/bin/mkdir -p "$homedir/.ssh"
-    touch "$homedir/.ssh/config"
     /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homedir/.ssh/id_ed25519" -C "$username" <<<y >/dev/null 2>&1
     {
         echo "Host *"
@@ -43,8 +46,3 @@ if [ ! -f "$homedir/.ssh/id_ed25519" ]; then
     } >> "$homedir/.ssh/config"
 
 fi
-
-# make sure user can always login
-chmod 700 "$homedir/.ssh"
-chmod 600 "$homedir/.ssh/config"
-/usr/bin/chown "$username":"$username"  -R "$homedir/.ssh"

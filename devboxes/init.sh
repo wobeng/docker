@@ -54,6 +54,10 @@ if ! grep -qxF "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
 then
 
     sudo mkdir -p /efs/home
+    sudo mkdir -p /efs/workspace
+    sudo mkdir -p /workspace
+    chmod 700 /workspace
+
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
     
@@ -61,17 +65,6 @@ fi
 
 #ensure all ssh keys are the same
 sudo rsync -a --ignore-times  --include='ssh_host_*'  --exclude='*' /efs/host_ssh_keys/ /etc/ssh/
-
-# mount efs workspaces
-if ! grep -qxF "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" /etc/fstab
-then
-
-    sudo mkdir -p /efs/workspaces
-    sudo mkdir -p /workspaces
-    chmod 700 /workspaces
-    mount -t efs -o tls,iam "$EFS_ID":/workspaces /workspaces
-    echo "$EFS_ID:/workspaces /workspaces efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab
-fi
  
 
 # add user script

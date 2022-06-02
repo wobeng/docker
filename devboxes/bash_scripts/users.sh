@@ -32,18 +32,25 @@ do
         for ((i=0; i<$count; i++)); do
             email=`jq -r '.users['$i'].email // empty' "$userStatePath"`
             hashCode=`jq -r '.users['$i'].hashCode // empty' "$userStatePath"`
+            ipid=`jq -r '.users['$i'].ipid // empty' "$userStatePath"`
             hashCodePath="/etc/pam_scripts/users/$hashCode.txt"
 
+            uuid=$(echo "$ipid" | cut -c -10)
             username=$(/usr/bin/echo $email | cut -d@ -f1)
             fulldomain=$(/usr/bin/echo  $email | cut -d@ -f2)
             loginUsername="$domain-$username"
             homeDir="/home/$loginUsername"
+            workspaceDir="/workspace/$loginUsername"
+            efsHomeDir="/efs$homeDir"
+            efsWorkspaceDir="/efs/$workspaceDir"
 
             rm -f "$homeDir/authorized_keys"
             
             if [[ ! -f "$hashCodePath" ]]; then
                 # add user 
-                /usr/sbin/adduser $loginUsername || true
+                groupadd -g $uuid $loginUsername || true
+                useradd $loginUsername -u $uuid -g $uuid -m -s /bin/bash || true
+
                 # add user to docker group
                 /usr/sbin/usermod -aG docker $loginUsername || true
 
@@ -57,11 +64,9 @@ do
                 /usr/bin/mkdir -p "$homeDir/.aws"
                 /usr/bin/mkdir -p "$homeDir/.gcloud"
                 /usr/bin/mkdir -p "$homeDir/containers/.devcontainer"
-                /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir/containers"
 
-                /usr/bin/mkdir -p "/workspaces/$loginUsername"
-                chmod 700 "/workspaces/$loginUsername"
-                /usr/bin/chown "$loginUsername":"$loginUsername" "/workspaces/$loginUsername"
+                /usr/bin/mkdir -p "$workspaceDir"
+                chmod 700 "$workspaceDir"
 
                 # add envs
                 touch "$homeDir/.bashrc"
@@ -69,7 +74,7 @@ do
                 echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
                 echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
                 echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
-                echo "export USER_WORKSPACE=/workspaces/$loginUsername" >> "$homeDir/.bashrc"
+                echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
 
 
                 # auto start ssh agent
@@ -80,6 +85,23 @@ do
                 echo "" >> "$homeDir/.bash_profile"
                 echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homeDir/.bash_profile"
 
+                # ssh
+                /usr/bin/mkdir -p "$homeDir/.ssh"
+                touch "$homeDir/.ssh/config"
+                chmod 700 "$homeDir/.ssh"
+                chmod 600 "$homeDir/.ssh/config"
+
+                # prepare mount
+                /usr/bin/mkdir -p "$efsHomeDir"
+                /usr/bin/mkdir -p "$efsWorkspaceDir"
+                /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homeDir/ $efsHomeDir/
+
+                /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir"
+                /usr/bin/chown "$loginUsername":"$loginUsername" -R "$workspaceDir"
+                /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsHomeDir"
+                /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsWorkspaceDir"
+
+                
                 touch "$hashCodePath"
             fi
         done
