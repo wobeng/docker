@@ -17,7 +17,7 @@ do
         curl $stateUrl/data/users.json -S -s -o $userStatePath
 
         # check if there is a difference
-        LocalLastSync=$(touch $lastSync && cat $lastSync || echo "")
+        LocalLastSync=$(/usr/bin/touch $lastSync && cat $lastSync || echo "")
         RemoteLastSync=$(jq -r .lastSync $statePath)
 
         if [[ "${LocalLastSync}" != "" ]] ;then
@@ -55,7 +55,7 @@ do
                 /usr/sbin/usermod -aG docker $loginUsername || true
 
                 # set git config
-                touch "$homeDir/.gitconfig"
+                /usr/bin/touch "$homeDir/.gitconfig"
                 echo "[user]" >> "$homeDir/.gitconfig"
                 echo "      name = $username" >> "$homeDir/.gitconfig"
                 echo "      email = $email" >> "$homeDir/.gitconfig"
@@ -69,7 +69,7 @@ do
                 chmod 700 "$workspaceDir"
 
                 # add envs
-                touch "$homeDir/.bashrc"
+                /usr/bin/touch "$homeDir/.bashrc"
                 echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
                 echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
                 echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
@@ -87,7 +87,7 @@ do
 
                 # ssh
                 /usr/bin/mkdir -p "$homeDir/.ssh"
-                touch "$homeDir/.ssh/config"
+                /usr/bin/touch "$homeDir/.ssh/config"
                 chmod 700 "$homeDir/.ssh"
                 chmod 600 "$homeDir/.ssh/config"
 
@@ -102,7 +102,7 @@ do
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsWorkspaceDir"
 
                 
-                touch "$hashCodePath"
+                /usr/bin/touch "$hashCodePath"
             fi
         done
 
