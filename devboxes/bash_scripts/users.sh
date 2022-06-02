@@ -35,7 +35,7 @@ do
             ipid=`jq -r '.users['$i'].ipid // empty' "$userStatePath"`
             hashCodePath="/etc/pam_scripts/users/$hashCode.txt"
 
-            uuid=$(echo "$ipid" | cut -c -10)
+            uuid=$(/usr/bin/echo "$ipid" | cut -c -5)
             username=$(/usr/bin/echo $email | cut -d@ -f1)
             fulldomain=$(/usr/bin/echo  $email | cut -d@ -f2)
             loginUsername="$domain-$username"
