@@ -17,12 +17,12 @@ do
         curl $stateUrl/data/users.json -S -s -o $userStatePath
 
         # check if there is a difference
-        LocalLastSync=$(echo -n > $lastSync && cat $lastSync || echo "")
+        LocalLastSync=$(/usr/bin/echo -n > $lastSync && cat $lastSync || /usr/bin/echo "")
         RemoteLastSync=$(jq -r .lastSync $statePath)
 
         if [[ "${LocalLastSync}" != "" ]] ;then
             if [[ "${LocalLastSync}" == "${RemoteLastSync}" ]] ;then
-                echo "Local and remote sync matches"
+                /usr/bin/echo "Local and remote sync matches"
                 exit 0
             fi
         fi
@@ -55,10 +55,10 @@ do
                 /usr/sbin/usermod -aG docker $loginUsername || true
 
                 # set git config
-                echo -n > "$homeDir/.gitconfig"
-                echo "[user]" >> "$homeDir/.gitconfig"
-                echo "      name = $username" >> "$homeDir/.gitconfig"
-                echo "      email = $email" >> "$homeDir/.gitconfig"
+                /usr/bin/echo -n > "$homeDir/.gitconfig"
+                /usr/bin/echo "[user]" >> "$homeDir/.gitconfig"
+                /usr/bin/echo "      name = $username" >> "$homeDir/.gitconfig"
+                /usr/bin/echo "      email = $email" >> "$homeDir/.gitconfig"
 
                 # create workspace
                 /usr/bin/mkdir -p "$homeDir/.aws"
@@ -69,25 +69,25 @@ do
                 chmod 700 "$workspaceDir"
 
                 # add envs
-                echo -n > "$homeDir/.bashrc"
-                echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
-                echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
-                echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
-                echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
-                echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
+                /usr/bin/echo -n > "$homeDir/.bashrc"
+                /usr/bin/echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
+                /usr/bin/echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
+                /usr/bin/echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
+                /usr/bin/echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
+                /usr/bin/echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
 
 
                 # auto start ssh agent
-                echo "" >> "$homeDir/.bash_profile"
+                /usr/bin/echo "" >> "$homeDir/.bash_profile"
                 /usr/bin/cat "/tmp/docker-master/devboxes/bash_scripts/ssh_agent.sh" >> "$homeDir/.bash_profile"
 
                 # user start up script
-                echo "" >> "$homeDir/.bash_profile"
-                echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homeDir/.bash_profile"
+                /usr/bin/echo "" >> "$homeDir/.bash_profile"
+                /usr/bin/echo "bash /usr/local/bin/workspace-one-time-startup.sh" >> "$homeDir/.bash_profile"
 
                 # ssh
                 /usr/bin/mkdir -p "$homeDir/.ssh"
-                echo -n > "$homeDir/.ssh/config"
+                /usr/bin/echo -n > "$homeDir/.ssh/config"
                 chmod 700 "$homeDir/.ssh"
                 chmod 600 "$homeDir/.ssh/config"
 
@@ -102,11 +102,11 @@ do
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsWorkspaceDir"
 
                 
-                echo -n > "$hashCodePath"
+                /usr/bin/echo -n > "$hashCodePath"
             fi
         done
 
         # update lastSync
-        curl  -s $stateUrl/data/state.json | jq -r '.lastSync' > $lastSync
+        /usr/bin/curl -s $stateUrl/data/state.json | jq -r '.lastSync' > $lastSync
 
 done
