@@ -51,9 +51,6 @@ do
                 /usr/sbin/groupadd -g $uuid $loginUsername || true
                 /usr/sbin/useradd $loginUsername -u $uuid -g $uuid -m -s /bin/bash || true
 
-                # add user to docker group
-                /usr/sbin/usermod -aG docker $loginUsername || true
-
                 # set git config
                 /usr/bin/echo -n > "$homeDir/.gitconfig"
                 /usr/bin/echo "[user]" >> "$homeDir/.gitconfig"
@@ -101,6 +98,8 @@ do
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsHomeDir"
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsWorkspaceDir"
 
+                # add user to docker group
+                /usr/sbin/usermod -aG docker $loginUsername || true
                 
                 /usr/bin/echo -n > "$hashCodePath"
             fi
