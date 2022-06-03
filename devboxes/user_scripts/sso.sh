@@ -3,7 +3,7 @@
 set -e
 
 script_folder="$1"
-script_folder_name="$(echo $1 | cut -d/ -f6)"
+script_folder_name="$(echo $1 | cut -d/ -f5)"
 
 add-aws-config()
 {
