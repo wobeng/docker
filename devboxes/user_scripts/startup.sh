@@ -42,6 +42,6 @@ fi
 
 
 # make containers
-if [ ! -f "$HOME/containers/.devcontainer/devcontainer.json" ]; then
-    /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$HOME/containers/.devcontainer/devcontainer.json"
-fi
+#if [ ! -f "$HOME/containers/.devcontainer/devcontainer.json" ]; then
+#    /bin/cp "/tmp/docker-master/devboxes/devcontainer.json" "$HOME/containers/.devcontainer/devcontainer.json"
+#fi

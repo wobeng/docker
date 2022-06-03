@@ -61,7 +61,7 @@ do
                 # create workspace
                 /usr/bin/mkdir -p "$homeDir/.aws"
                 /usr/bin/mkdir -p "$homeDir/.gcloud"
-                /usr/bin/mkdir -p "$homeDir/containers/.devcontainer"
+                #/usr/bin/mkdir -p "$homeDir/containers/.devcontainer"
 
                 /usr/bin/mkdir -p "$workspaceDir"
                 chmod 700 "$workspaceDir"
