@@ -26,7 +26,7 @@ if [ $dtSec -lt $taSec  ]; then
 fi
 
 
-pubkey=$(curl --fail-with-body -s $stateUrl/users/keys/${username}.pub)
+pubkey=$(curl -H 'Cache-Control: no-cache, no-store' --fail-with-body -s $stateUrl/users/keys/${username}.pub)
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit 1

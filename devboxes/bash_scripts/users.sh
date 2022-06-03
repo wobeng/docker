@@ -81,9 +81,7 @@ do
 
                 # ssh
                 /usr/bin/mkdir -p "$homeDir/.ssh"
-                /usr/bin/echo -n > "$homeDir/.ssh/config"
                 /usr/bin/chmod 700 "$homeDir/.ssh"
-                /usr/bin/chmod 600 "$homeDir/.ssh/config"
 
                 # make sure all files belong to user
                 /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir"

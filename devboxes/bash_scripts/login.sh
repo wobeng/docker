@@ -54,6 +54,7 @@ fi
 
 # make sure there is a ssh key
 if [ ! -f "$homeDir/.ssh/id_ed25519" ]; then
+    /usr/bin/touch "$homeDir/.ssh/config"
     /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$homeDir/.ssh/id_ed25519" -C "$username" <<<y >/dev/null 2>&1
     {
         /usr/bin/echo "Host *"
@@ -61,5 +62,8 @@ if [ ! -f "$homeDir/.ssh/id_ed25519" ]; then
         /usr/bin/echo " ForwardAgent yes"
         /usr/bin/echo " IdentityFile $homeDir/.ssh/id_ed25519"
     } >> "$homeDir/.ssh/config"
-
+    
+    /usr/bin/chmod 600 "$homeDir/.ssh/config"
+    /usr/bin/chmod 600 "$homeDir/.ssh/id_ed25519"
+    /usr/bin/chown "$username":"$username" -R "$homeDir/.ssh"
 fi
