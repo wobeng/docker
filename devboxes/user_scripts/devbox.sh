@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 repo_name=$2
 folder=$(echo $repo_name | cut -d/ -f2)
