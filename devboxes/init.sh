@@ -56,7 +56,7 @@ then
     sudo mkdir -p /efs/home
     sudo mkdir -p /efs/workspace
     sudo mkdir -p /workspace
-    chmod 700 /workspace
+    chmod 755 /workspace
 
     mount -t efs -o tls,iam "$EFS_ID":/ /efs
     echo "$EFS_ID:/ /efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab

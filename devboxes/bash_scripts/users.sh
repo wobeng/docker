@@ -61,10 +61,9 @@ do
                 # create workspace
                 /usr/bin/mkdir -p "$homeDir/.aws"
                 /usr/bin/mkdir -p "$homeDir/.gcloud"
+                /usr/bin/mkdir -p "$workspaceDir"
                 #/usr/bin/mkdir -p "$homeDir/containers/.devcontainer"
 
-                /usr/bin/mkdir -p "$workspaceDir"
-                chmod 700 "$workspaceDir"
 
                 # add envs
                 /usr/bin/echo -n > "$homeDir/.bashrc"
@@ -86,8 +85,6 @@ do
                 # ssh
                 /usr/bin/mkdir -p "$homeDir/.ssh"
                 /usr/bin/echo -n > "$homeDir/.ssh/config"
-                chmod 700 "$homeDir/.ssh"
-                chmod 600 "$homeDir/.ssh/config"
 
                 # prepare mount
                 /usr/bin/mkdir -p "$efsHomeDir"
@@ -98,6 +95,12 @@ do
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$workspaceDir"
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsHomeDir"
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$efsWorkspaceDir"
+
+                /usr/bin/chmod 700 "$homeDir/.ssh"
+                /usr/bin/chmod 600 "$homeDir/.ssh/config"
+                /usr/bin/chmod 700 "$workspaceDir"
+                /usr/bin/chmod 700 "$efsHomeDir"
+                /usr/bin/chmod 700 "$efsWorkspaceDir"
 
                 # add user to docker group
                 /usr/sbin/usermod -aG docker $loginUsername || true
