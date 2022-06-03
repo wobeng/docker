@@ -88,8 +88,9 @@ mv /tmp/docker-master/devboxes/user_scripts/startup.sh /usr/local/bin/workspace-
 sed -i "s/EFS_ID/$EFS_ID/g" /etc/pam_scripts/login-logger.sh
 sed -i "s/DOMAINS/$DOMAINS/g" /etc/pam_scripts/users.sh
 
-sudo chmod 755 /etc/pam_scripts
+sudo chmod 700 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
+sudo chown ec2-user:ec2-user /etc/pam_scripts/users.sh
 sudo chmod ugo+x -R /etc/pam_scripts
 
 sudo chmod ugo+x /usr/local/bin/devbox
@@ -101,6 +102,8 @@ sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log 
 
 # add cron scripts
 touch /var/spool/cron/ec2-user
+touch /var/log/create-users.log
+sudo chown ec2-user:ec2-user /var/log/create-users.log
 /usr/bin/crontab /var/spool/cron/ec2-user
 echo "*/5 * * * * cd /home/ec2-user && sudo bash /etc/pam_scripts/users.sh >> /var/log/create-users.log 2>&1" >> /var/spool/cron/ec2-user
 

@@ -1,4 +1,5 @@
 #!/bin/sh
+
 set -e
 
 domain=$(/usr/bin/echo ${1}| cut -d- -f1)
