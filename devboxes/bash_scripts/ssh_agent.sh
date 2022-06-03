@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 

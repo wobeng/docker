@@ -63,7 +63,7 @@ do
 
 
                 # add envs
-                /usr/bin/echo -n > "$homeDir/.bashrc"
+                /usr/bin/touch "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
