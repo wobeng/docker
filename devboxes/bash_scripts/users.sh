@@ -92,7 +92,7 @@ do
                 # prepare mount
                 /usr/bin/mkdir -p "$efsHomeDir"
                 /usr/bin/mkdir -p "$efsWorkspaceDir"
-                /usr/bin/rsync -a --ignore-existing --include='.bash*' --exclude='*' $homeDir/ $efsHomeDir/
+                /usr/bin/rsync  -a --ignore-times $homeDir/ $efsHomeDir/
 
                 /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir"
                 /usr/bin/chown "$loginUsername":"$loginUsername" -R "$workspaceDir"
