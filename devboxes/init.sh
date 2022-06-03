@@ -103,7 +103,7 @@ sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log 
 # add cron scripts
 touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
-echo "*/5 * * * * /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
+echo "*/5 * * * * cd /root && /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
 
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config

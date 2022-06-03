@@ -14,7 +14,7 @@ if [ ! -n "$PAM_USER" ]; then
   exit 0
 fi
 
-username=$username
+username=$PAM_USER
 homedir="/home/$username"
 workspacedir="/workspace/$username"
 
