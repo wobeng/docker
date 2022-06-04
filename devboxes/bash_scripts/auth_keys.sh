@@ -6,6 +6,7 @@ domain=$(/usr/bin/echo ${1}| cut -d- -f1)
 username=$(/usr/bin/echo ${1}| cut -d- -f2)
 
 statePath="/etc/pam_scripts/users/$domain-state.json"
+stateUsersPath="/etc/pam_scripts/users/$domain-users.json"
 stateUrl="https://s3.amazonaws.com/public-gws-aws.$domain"
 
 
@@ -16,7 +17,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-timeago='10 min ago'
+timeago='15 min ago'
 dtSec=$(date --date "$datetime" +'%s') 
 taSec=$(date --date "$timeago" +'%s')
 
@@ -25,6 +26,11 @@ if [ $dtSec -lt $taSec  ]; then
     exit 1
 fi
 
+username=$(cat $stateUsersPath | jq -r ".users[] | select(.email==\"$username\") | .email")
+if [ $? -ne 0 ]; then
+    echo "username does not exist"
+    exit 1
+fi
 
 pubkey=$(curl -H 'Cache-Control: no-cache, no-store' --fail-with-body -s $stateUrl/users/keys/${username}.pub)
 if [ $? -ne 0 ]; then
