@@ -29,7 +29,7 @@ if [ $dtSec -lt $taSec  ]; then
     exit_nicely "$@"
 fi
 
-username=$(cat $stateUsersPath | jq -r ".users[] | select(.email==\"$username\") | .email")
+resp=$(cat $stateUsersPath | jq -r ".users[] | select(.email | startswith(\"$username@$domain\")) | .email")
 if [ $? -ne 0 ]; then
     echo "username does not exist"
     exit_nicely "$@"
