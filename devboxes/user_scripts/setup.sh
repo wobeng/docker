@@ -32,7 +32,7 @@ install-requires()
 
     if [[ -f "requirements.txt" ]]; then
       echo "  Installing pip packages in $1"
-       $USER_WORKSPACE/configs/virenv/bin/python -m pip install -r requirements.txt > /dev/null 2>&1
+       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -r requirements.txt > /dev/null 2>&1
       echo "  Finished installing pip packages in $1"
     fi
 
@@ -45,7 +45,7 @@ install-local-requires()
 
     if [[ -f "setup.py" ]]; then
       echo "  Installing local pip packages in $1"
-       $USER_WORKSPACE/configs/virenv/bin/python -m pip install -e $target > /dev/null 2>&1
+       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -e $target > /dev/null 2>&1
       echo "  Finished installing local pip packages in $1"
     fi
 

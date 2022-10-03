@@ -6,6 +6,7 @@ set -e
 if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_success" ]; then
 
     mkdir -p "$USER_WORKSPACE/repos"
+    mkdir -p "$USER_WORKSPACE/extras"
     mkdir -p "$USER_WORKSPACE/configs/envs"
     ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
     ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
@@ -22,16 +23,16 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
 
     # set up virenv and packages
 
-    if [ ! -d "$USER_WORKSPACE/configs/virenv" ]; then
-        python3 -m venv $USER_WORKSPACE/configs/virenv
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pip
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pylint
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade autopep8
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade black
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade isort
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade flake8
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pyflakes
-        $USER_WORKSPACE/configs/virenv/bin/python -m pip install --upgrade pre-commit
+    if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
+        python3 -m venv $USER_WORKSPACE/extras/virenv
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pylint
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade autopep8
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade black
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade isort
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade flake8
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pyflakes
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit
 
     fi
 
