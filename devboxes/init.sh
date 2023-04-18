@@ -106,7 +106,7 @@ echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
 # create users
-/bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
+sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
 
 # add cron scripts
 touch /var/spool/cron/root
