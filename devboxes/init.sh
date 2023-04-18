@@ -100,6 +100,12 @@ sudo chmod ugo+x /usr/local/bin/workspace-one-time-startup.sh
 
 sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" /etc/pam.d/sshd || echo "session optional pam_exec.so seteuid debug log=/var/log/pam.log /etc/pam_scripts/login-logger.sh" >> /etc/pam.d/sshd
 
+
+# increase watchers
+echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+# create users
+/bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1
+
 # add cron scripts
 touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
@@ -111,5 +117,3 @@ sudo sed -i 's/ClientAliveInterval 0/ClientAliveInterval 300/g' /etc/ssh/sshd_co
 sudo sed -i 's,AuthorizedKeysCommandUser ec2-instance-connect,AuthorizedKeysCommandUser root,g' /etc/ssh/sshd_config
 sudo sed -i 's,AuthorizedKeysCommand /opt/aws/bin/eic_run_authorized_keys %u %f,AuthorizedKeysCommand /bin/sh /etc/pam_scripts/auth_keys.sh %u %f %h,g' /etc/ssh/sshd_config
 sudo systemctl restart sshd
-
-echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
