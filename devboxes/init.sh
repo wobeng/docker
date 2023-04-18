@@ -103,6 +103,8 @@ sudo grep -qxF "session optional pam_exec.so seteuid debug log=/var/log/pam.log 
 
 # increase watchers
 echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+sudo /usr/sbin/sysctl -p
+
 # create users
 /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1
 
