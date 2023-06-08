@@ -26,12 +26,7 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
     if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
         python3 -m venv $USER_WORKSPACE/extras/virenv
         $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pylint
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade autopep8
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade black
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade isort
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade flake8
-        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pyflakes
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade ruff
         $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit
 
     fi
