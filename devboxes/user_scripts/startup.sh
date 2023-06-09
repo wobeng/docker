@@ -27,6 +27,7 @@ if [ ! -f "$USER_WORKSPACE/configs/installs/_install_workspace_onetime_startup_s
         python3 -m venv $USER_WORKSPACE/extras/virenv
         $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip
         $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade ruff
+        $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pytest
         $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit
 
     fi
