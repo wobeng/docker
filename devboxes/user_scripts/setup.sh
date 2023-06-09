@@ -68,24 +68,6 @@ if [ -f "${workspace_file}" ]; then
     echo ""
     echo ""
 
-    echo "> Installing pip editable requirements"
-    #install editable pip requirements
-    if [[ ! -f "${setup_installs}/_${script_folder_name}_install_editable_pip_success" ]]; then
-
-      for i in $(jq -cr '.folders[] | (.repo) // empty' "${workspace_file}"); do
-          if [ ! -z "$i" ]; then
-            install-local-requires  "$i" ||  echo "  Error installing editable requirements for $i, if any"
-          fi
-      done
-
-      touch "${setup_installs}/_${script_folder_name}_install_editable_pip_success"
-    else
-        echo "  Already installed editable pip requirements"
-    fi
-    echo "> Finished installing pip editable requirements"
-    echo ""
-    echo ""
-
     echo "> Installing npm and pip requirements"
     #install npm and pip requirements
     if [[ ! -f "${setup_installs}/_${script_folder_name}_install_pip_success" ]]; then
@@ -103,6 +85,25 @@ if [ -f "${workspace_file}" ]; then
     echo "> Finished installing npm and pip requirements"
     echo ""
     echo ""
+
+    echo "> Installing pip editable requirements"
+    #install editable pip requirements
+    if [[ ! -f "${setup_installs}/_${script_folder_name}_install_editable_pip_success" ]]; then
+
+      for i in $(jq -cr '.folders[] | (.repo) // empty' "${workspace_file}"); do
+          if [ ! -z "$i" ]; then
+            install-local-requires  "$i" ||  echo "  Error installing pip editable requirements for $i, if any"
+          fi
+      done
+
+      touch "${setup_installs}/_${script_folder_name}_install_editable_pip_success"
+    else
+        echo "  Already installed pip editable requirements"
+    fi
+    echo "> Finished installing pip editable requirements"
+    echo ""
+    echo ""
+
 
 
 else
