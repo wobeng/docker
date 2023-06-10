@@ -78,8 +78,6 @@ mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
 mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
 
 sed -i "s/DOMAINS/$DOMAINS/g" /etc/pam_scripts/users.sh
-sed -i "s/HOSTNAME/$HOSTNAME/g" /etc/pam_scripts/users.sh
-
 
 sudo chmod 700 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
