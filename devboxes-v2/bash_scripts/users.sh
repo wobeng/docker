@@ -19,8 +19,8 @@ do
         lastSync="/etc/pam_scripts/users/$domain-lastSync.txt"
 
         # get data
-        curl $stateUrl/data/state.json -S -s -o $statePath
-        curl $stateUrl/data/devboxes/${INSTANCE_NAME}.json -S -s -o $userStatePath
+        curl $stateUrl/data/state.json -f -S -s -o $statePath || continue
+        curl $stateUrl/data/devboxes/${INSTANCE_NAME}.json -f -S -s -o $userStatePath || continue
 
         # don't outside users of allowed domains
         find /data/home -name "authorized_keys" -type f -delete
