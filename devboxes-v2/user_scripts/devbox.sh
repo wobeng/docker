@@ -8,15 +8,6 @@ echo "==================== START DEVBOX ===================="
 echo ""
 echo ""
 
-# setup env
-mkdir -p "$USER_WORKSPACE/repos"
-mkdir -p "$USER_WORKSPACE/extras"
-mkdir -p "$USER_WORKSPACE/configs/envs"
-mkdir -p "$USER_WORKSPACE/configs/installs"
-ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
-ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
-touch $USER_WORKSPACE/configs/envs/dev
-
 if ! grep -qxF "ENVIRONMENT=develop" $USER_WORKSPACE/configs/envs/dev
 then
     echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev
