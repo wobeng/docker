@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 repo_name=$2
 folder=$(echo $repo_name | cut -d/ -f2)
 target="$USER_WORKSPACE/repos/$folder"
@@ -59,8 +61,6 @@ if [ ! -d  "$target" ] ; then
   fi
 
 fi
-
-set -e
 
 # set up sso config
 /usr/local/bin/sso.sh "$target"
