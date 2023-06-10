@@ -4,7 +4,7 @@
 set -e
 
 script_folder="$1"
-script_folder_name="$(echo $1 | cut -d/ -f5)"
+script_folder_name="$(echo $1 | cut -d/ -f6)"
 repos_folder="$USER_WORKSPACE/repos"
 setup_installs="$USER_WORKSPACE/configs/installs"
 
