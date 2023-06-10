@@ -52,7 +52,7 @@ do
             if [[ ! -f "$hashCodePath" ]]; then
                 # add user 
                 /usr/sbin/groupadd -g $uuid $loginUsername || true
-                /usr/sbin/useradd $loginUsername -d $homeDir -u $uuid -g $uuid -m -s /bin/bash || true
+                /usr/sbin/useradd $loginUsername -u $uuid -g $uuid -m -d $homeDir -s /bin/bash || true
 
                 # set git config
                 /usr/bin/echo -n > "$homeDir/.gitconfig"
