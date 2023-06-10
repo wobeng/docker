@@ -63,9 +63,10 @@ do
                 /usr/bin/echo "      name = $username" >> "$homeDir/.gitconfig"
                 /usr/bin/echo "      email = $email" >> "$homeDir/.gitconfig"
 
-                # create aws and gcloud login folder
+                # create directories
                 /usr/bin/mkdir -p "$homeDir/.aws"
                 /usr/bin/mkdir -p "$homeDir/.gcloud"
+                /usr/bin/mkdir -p "$USER_WORKSPACE"
 
 
                 # add envs
@@ -86,6 +87,7 @@ do
 
                 # make sure all files belong to user
                 /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$homeDir"
+                /usr/bin/chown "$loginUsername":"$loginUsername"  -R "$workspaceDir"
 
                 # add user to docker group
                 /usr/sbin/usermod -aG docker $loginUsername || true
