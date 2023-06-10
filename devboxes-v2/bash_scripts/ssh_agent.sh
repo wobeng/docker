@@ -13,7 +13,7 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
         /usr/bin/echo " IdentityFile $HOME/.ssh/id_ed25519"
     } >> "$HOME/.ssh/config"
     
-    /usr/bin/ssh-keygenssh-keyscan github.com >> $HOME/.ssh/known_hosts
+    /usr/bin/ssh-keyscan github.com >> $HOME/.ssh/known_hosts
         
     /usr/bin/chmod 600 "$HOME/.ssh/config"
     /usr/bin/chmod 600 "$HOME/.ssh/id_ed25519"
