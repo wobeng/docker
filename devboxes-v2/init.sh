@@ -6,6 +6,15 @@ set -e
 sudo yum remove -y awscli
 sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
 
+# mount ebs
+sudo mkfs -t ext4 /dev/sdb
+sudo mkdir /data
+sudo mount /dev/sdb /data/
+sudo mkdir -p /data/home
+sudo mkdir -p /data/workspace
+echo "/dev/sdb       /data   ext4    defaults,nofail        0       0" >> /etc/fstab
+sudo mount -a
+
 # start ssm
 sudo systemctl restart amazon-ssm-agent
 sudo systemctl enable amazon-ssm-agent
