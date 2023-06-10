@@ -66,14 +66,14 @@ do
                 # create directories
                 /usr/bin/mkdir -p "$homeDir/.aws"
                 /usr/bin/mkdir -p "$homeDir/.gcloud"
-                /usr/bin/mkdir -p "$USER_WORKSPACE"
-                /usr/bin/mkdir -p "$USER_WORKSPACE/repos"
-                /usr/bin/mkdir -p "$USER_WORKSPACE/extras"
-                /usr/bin/mkdir -p "$USER_WORKSPACE/configs/envs"
-                /usr/bin/mkdir -p "$USER_WORKSPACE/configs/installs"
-                /bin/ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
-                /bin/ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
-                /usr/bin/touch $USER_WORKSPACE/configs/envs/dev
+                /usr/bin/mkdir -p "$workspaceDir"
+                /usr/bin/mkdir -p "$workspaceDir/repos"
+                /usr/bin/mkdir -p "$workspaceDir/extras"
+                /usr/bin/mkdir -p "$workspaceDir/configs/envs"
+                /usr/bin/mkdir -p "$workspaceDir/configs/installs"
+                /bin/ln -s "$HOME/.aws" $workspaceDir/configs/aws
+                /bin/ln -s "$HOME/.gcloud" $workspaceDir/configs/gcloud
+                /usr/bin/touch $workspaceDir/configs/envs/dev
 
 
                 # add envs
