@@ -10,7 +10,9 @@ echo ""
 man () {
      echo "Oops, Something went wrong"
      echo "Command format: devbox setup <org>/<username>"
-     echo "Ensure your public key ~/.ssh/id_ed25519.pub is attached to $USER_EMAIL github https://github.com/settings/keys"
+     echo "Ensure your public key below (~/.ssh/id_ed25519.pub) is added to your $USER_EMAIL github account settings https://github.com/settings/keys"
+     echo ""
+     cat $HOME/.ssh/id_ed25519.pub
      exit 1
 }
 
