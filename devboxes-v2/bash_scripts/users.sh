@@ -71,8 +71,8 @@ do
                 /usr/bin/mkdir -p "$workspaceDir/extras"
                 /usr/bin/mkdir -p "$workspaceDir/configs/envs"
                 /usr/bin/mkdir -p "$workspaceDir/configs/installs"
-                /bin/ln -s "$HOME/.aws" $workspaceDir/configs/aws
-                /bin/ln -s "$HOME/.gcloud" $workspaceDir/configs/gcloud
+                /bin/ln -s "$homeDir/.aws" $workspaceDir/configs/aws
+                /bin/ln -s "$homeDir/.gcloud" $workspaceDir/configs/gcloud
                 /usr/bin/touch $workspaceDir/configs/envs/dev
 
 
