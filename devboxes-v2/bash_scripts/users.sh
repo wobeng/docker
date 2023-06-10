@@ -2,8 +2,11 @@
 
 set -e
 
-hostname="HOSTNAME"
 allowedDomains="DOMAINS"
+
+INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
+REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
+INSTANCE_NAME="`aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Name" --region $REGION --output=text | cut -f5`"
 
 
 for domain in ${allowedDomains//,/ }
@@ -17,7 +20,7 @@ do
 
         # get data
         curl $stateUrl/data/state.json -S -s -o $statePath
-        curl $stateUrl/data/devboxes/${hostname}.json -S -s -o $userStatePath
+        curl $stateUrl/data/devboxes/${INSTANCE_NAME}.json -S -s -o $userStatePath
 
         # don't outside users of allowed domains
         find /data/home -name "authorized_keys" -type f -delete
