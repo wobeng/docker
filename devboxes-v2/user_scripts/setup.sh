@@ -52,33 +52,6 @@ install-local-requires()
 
 }
 
-# setup env
-mkdir -p "$USER_WORKSPACE/repos"
-mkdir -p "$USER_WORKSPACE/extras"
-mkdir -p "$USER_WORKSPACE/configs/envs"
-mkdir -p "$USER_WORKSPACE/configs/installs"
-ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
-ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
-touch $USER_WORKSPACE/configs/envs/dev
-
-if ! grep -qxF "ENVIRONMENT=develop" $USER_WORKSPACE/configs/envs/dev
-then
-    echo "ENVIRONMENT=develop" >> $USER_WORKSPACE/configs/envs/dev
-fi
-if ! grep -qxF "IS_LOCAL=true" $USER_WORKSPACE/configs/envs/dev
-then
-    echo "IS_LOCAL=true" >> $USER_WORKSPACE/configs/envs/dev
-fi
-
-if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
-    python3 -m venv $USER_WORKSPACE/extras/virenv
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade ruff
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pytest
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit
-
-fi
-
 # set up workspace repos and install requirements
 workspace_file="${script_folder}/${script_folder_name}.code-workspace"
 if [ -f "${workspace_file}" ]; then
