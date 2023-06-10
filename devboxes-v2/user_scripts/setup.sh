@@ -13,7 +13,7 @@ clone-repo()
     target="$repos_folder/$(echo $1 | cut -d/ -f2)"
 
     if [ ! -d "$target" ]; then
-       git clone "git@github.com:$1.git" "$target" > /dev/null 2>&1
+       git clone "git@github.com:$1.git" "$target" > /dev/null
        echo "  Finished cloning $1"
     else 
         echo "  Already cloned $1"
@@ -27,13 +27,13 @@ install-requires()
 
     if [[ -f "package.json" ]]; then
       echo "  Installing npm packages in $1"
-      yes | npm --prefix . install . > /dev/null 2>&1
+      yes | npm --prefix . install . > /dev/null
       echo "  Finished installing npm packages in $1"
     fi 
 
     if [[ -f "requirements.txt" ]]; then
       echo "  Installing pip packages in $1"
-       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -r requirements.txt > /dev/null 2>&1
+       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -r requirements.txt > /dev/null
       echo "  Finished installing pip packages in $1"
     fi
 
@@ -46,7 +46,7 @@ install-local-requires()
 
     if [[ -f "setup.py" ]]; then
       echo "  Installing local pip packages in $1"
-       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -e $target > /dev/null 2>&1
+       $USER_WORKSPACE/extras/virenv/bin/python -m pip install -e $target > /dev/null
       echo "  Finished installing local pip packages in $1"
     fi
 
