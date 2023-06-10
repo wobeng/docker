@@ -4,6 +4,7 @@
 
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
     /usr/bin/touch "$HOME/.ssh/config"
+    /usr/bin/touch "$HOME/.ssh/known_hosts"
     /usr/bin/ssh-keygen -q -t ed25519 -N '' -f "$HOME/.ssh/id_ed25519" -C "$USER" <<<y >/dev/null 2>&1
     {
         /usr/bin/echo "Host *"
@@ -12,8 +13,11 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
         /usr/bin/echo " IdentityFile $HOME/.ssh/id_ed25519"
     } >> "$HOME/.ssh/config"
     
+    /usr/bin/ssh-keygenssh-keyscan github.com >> $HOME/.ssh/known_hosts
+        
     /usr/bin/chmod 600 "$HOME/.ssh/config"
     /usr/bin/chmod 600 "$HOME/.ssh/id_ed25519"
+    /usr/bin/chmod 600 "$HOME/.ssh/known_hosts"
     /usr/bin/chown "$USER":"$USER" -R "$HOME/.ssh"
 fi
 
