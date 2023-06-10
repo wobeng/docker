@@ -73,6 +73,7 @@ do
                 /usr/bin/mkdir -p "$USER_WORKSPACE/configs/installs"
                 /bin/ln -s "$HOME/.aws" $USER_WORKSPACE/configs/aws
                 /bin/ln -s "$HOME/.gcloud" $USER_WORKSPACE/configs/gcloud
+                /usr/bin/touch $USER_WORKSPACE/configs/envs/dev
 
 
                 # add envs
