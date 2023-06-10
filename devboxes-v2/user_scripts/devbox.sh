@@ -54,7 +54,7 @@ fi
 
 if [ ! -d  "$target" ] ; then
 
-  git clone "git@github.com:$repo_name.git" "$target" > /dev/null 2>&1
+  git clone "git@github.com:$repo_name.git" "$target" > /dev/null
   prev_exit="${?}"
   if [ "${prev_exit}" -ne 0 ] ; then
     man 
