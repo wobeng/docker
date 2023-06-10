@@ -75,7 +75,7 @@ do
 
                 # auto start ssh agent
                 /usr/bin/echo "" >> "$homeDir/.bash_profile"
-                /usr/bin/cat "/tmp/docker-master/devboxes/bash_scripts/ssh_agent.sh" >> "$homeDir/.bash_profile"
+                /usr/bin/cat "/tmp/docker-master/devboxes-v2/bash_scripts/ssh_agent.sh" >> "$homeDir/.bash_profile"
 
                 # ssh
                 /usr/bin/mkdir -p "$homeDir/.ssh"

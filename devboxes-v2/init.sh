@@ -70,12 +70,12 @@ rm -rf /tmp/docker-master
 curl -L "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
 unzip /tmp/master.zip -d /tmp
 
-mv /tmp/docker-master/devboxes/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
-mv /tmp/docker-master/devboxes/bash_scripts/users.sh /etc/pam_scripts/users.sh
+mv /tmp/docker-master/devboxes-v2/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
+mv /tmp/docker-master/devboxes-v2/bash_scripts/users.sh /etc/pam_scripts/users.sh
 
-mv /tmp/docker-master/devboxes/user_scripts/devbox.sh /usr/local/bin/devbox
-mv /tmp/docker-master/devboxes/user_scripts/setup.sh /usr/local/bin/setup.sh
-mv /tmp/docker-master/devboxes/user_scripts/sso.sh /usr/local/bin/sso.sh
+mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/devbox
+mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
+mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
 
 sed -i "s/DOMAINS/$DOMAINS/g" /etc/pam_scripts/users.sh
 sed -i "s/HOSTNAME/$HOSTNAME/g" /etc/pam_scripts/users.sh
