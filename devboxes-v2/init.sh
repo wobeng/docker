@@ -25,18 +25,13 @@ sudo amazon-linux-extras install php7.2 -y
 sudo systemctl restart httpd
 sudo systemctl enable httpd
 
-# install nginx
-sudo amazon-linux-extras install nginx -y
-sudo systemctl restart nginx
-sudo systemctl enable nginx
-
 # install terraform
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
 sudo yum -y install terraform
 
 # set up golang
-sudo yum install golang -y
+sudo amazon-linux-extras install golang1.19 -y
 
 # Install docker
 sudo amazon-linux-extras install docker -y
