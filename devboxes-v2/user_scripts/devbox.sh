@@ -34,6 +34,7 @@ man () {
      echo "Ensure your public key below (~/.ssh/id_ed25519.pub) is added to your $USER_EMAIL github account settings https://github.com/settings/keys"
      echo ""
      cat $HOME/.ssh/id_ed25519.pub
+     echo ""
      exit 1
 }
 
