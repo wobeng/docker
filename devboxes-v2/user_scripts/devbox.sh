@@ -20,11 +20,11 @@ then
 fi
 
 if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
-    python3 -m venv $USER_WORKSPACE/extras/virenv
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade ruff
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pytest
-    $USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit
+    output=`python3 -m venv $USER_WORKSPACE/extras/virenv 2>&1` || echo $output
+    output=`$USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pip 2>&1` || echo $output
+    output=`$USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade ruff 2>&1` || echo $output
+    output=`$USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pytest 2>&1` || echo $output
+    output=`$USER_WORKSPACE/extras/virenv/bin/python -m pip install --upgrade pre-commit 2>&1` || echo $output
 
 fi
 
