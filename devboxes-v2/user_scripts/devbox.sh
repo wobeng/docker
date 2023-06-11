@@ -29,6 +29,7 @@ if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
 fi
 
 man () {
+     echo ""
      echo "Oops, Something went wrong"
      echo "Command format: devbox setup <org>/<username>"
      echo "Ensure your public key below (~/.ssh/id_ed25519.pub) is added to your $USER_EMAIL github account settings https://github.com/settings/keys"
@@ -54,11 +55,7 @@ fi
 
 if [ ! -d  "$target" ] ; then
 
-  git clone "git@github.com:$repo_name.git" "$target" > /dev/null
-  prev_exit="${?}"
-  if [ "${prev_exit}" -ne 0 ] ; then
-    man 
-  fi
+  output=`git clone "git@github.com:$repo_name.git" "$target" 2>&1` || echo $output && man
 
 fi
 
