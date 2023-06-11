@@ -55,7 +55,7 @@ fi
 
 if [ ! -d  "$target" ] ; then
 
-  output=`git clone "git@github.com:$repo_name.git" "$target" 2>&1` || echo $output && man
+  output=`git clone "git@github.com:$repo_name.git" "$target" 2>&1` || man
 
 fi
 
