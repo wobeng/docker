@@ -29,7 +29,6 @@ if [ ! -d "$USER_WORKSPACE/extras/virenv" ]; then
 fi
 
 man () {
-     echo ""
      echo "Oops, Something went wrong"
      echo "Command format: devbox setup <org>/<username>"
      echo "Ensure your public key below (~/.ssh/id_ed25519.pub) is added to your $USER_EMAIL github account settings https://github.com/settings/keys"
