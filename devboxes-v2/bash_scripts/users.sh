@@ -2,7 +2,12 @@
 
 set -e
 
+
 allowedDomains="DOMAINS"
+
+IP=0.0.0.0
+first_port=55535
+last_port=65535
 
 INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
 REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
@@ -83,6 +88,27 @@ do
                 /usr/bin/echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
+
+                # reserve ports
+                for run in {1..6}; do
+                    # loop through ports
+                    for ((port=$first_port; port<=$last_port; port++))
+                        do
+                            # continue if port exist 
+                            if [[ -f "/data/ports/$port" ]]; then
+                                continue
+                            fi
+                            
+                            # continue if port is not free
+                            (/usr/bin/echo >/dev/tcp/$IP/$port) > /dev/null 2>&1 && continue 
+                            # reserve port
+                             /usr/bin/echo "$loginUsername" >>  "/data/ports/$port"
+                             # expose the port as env
+                             /usr/bin/echo "export USER_PORT${run}=$port" >> "$homeDir/.bashrc"
+
+                            break
+                        done
+                done
 
                 # auto start ssh agent
                 /usr/bin/echo "" >> "$homeDir/.bash_profile"
