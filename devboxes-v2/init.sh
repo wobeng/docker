@@ -12,6 +12,7 @@ sudo mkdir /data
 sudo mount /dev/sdb /data/
 sudo mkdir -p /data/home
 sudo mkdir -p /data/workspace
+sudo mkdir -p /data/ports
 echo "/dev/sdb       /data   ext4    defaults,nofail        0       0" >> /etc/fstab
 sudo mount -a
 
