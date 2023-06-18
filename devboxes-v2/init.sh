@@ -112,11 +112,11 @@ echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
-# install ssl
-sudo certbot --nginx -d ${INSTANCE_NAME}.${INSTANCE_DOMAIN} --agree-tos --no-eff-email
-
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
+
+# install ssl
+sudo certbot --nginx -d ${INSTANCE_NAME}.${INSTANCE_DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email
 
 # add cron scripts
 touch /var/spool/cron/root
