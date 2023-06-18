@@ -116,6 +116,18 @@ sudo /usr/sbin/sysctl -p
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
 
 # install ssl
+hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
+    cat << EOF >> "/etc/nginx/conf.d/main.conf"
+server {
+listen 80; 
+server_name $hostName;
+location / {
+    proxy_set_header Host \$http_host;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_pass http://localhost:$8080;
+}
+}
+EOF
 sudo certbot --nginx -d ${INSTANCE_NAME}.${INSTANCE_DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email
 
 # add cron scripts

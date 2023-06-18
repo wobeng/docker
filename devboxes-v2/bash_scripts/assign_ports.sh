@@ -52,13 +52,18 @@ for run in {1..6}; do
     # create nginx conf
     cat << EOF >> "/etc/nginx/conf.d/${loginUsername}.conf"
 server {
-listen $outport; 
+listen $outport ssl; 
 server_name $hostName;
 location / {
     proxy_set_header Host \$http_host;
     proxy_set_header X-Real-IP \$remote_addr;
     proxy_pass http://localhost:$inport;
-}}
+}
+ssl_certificate /etc/letsencrypt/live/$hostName/fullchain.pem; # managed by Certbot
+ssl_certificate_key /etc/letsencrypt/live/$hostName/privkey.pem; # managed by Certbot
+include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
 EOF
      /usr/bin/echo "" >> "/etc/nginx/conf.d/${loginUsername}.conf"
 done
