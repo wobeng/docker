@@ -5,7 +5,7 @@ set -e
 
 allowedDomains="DOMAINS"
 instanceName="INSTANCE_NAME"
-instanceName="INSTANCE_DOMAIN"
+instanceDomain="INSTANCE_DOMAIN"
 
 IP=0.0.0.0
 first_port=55535
