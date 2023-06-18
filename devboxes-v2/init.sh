@@ -119,9 +119,8 @@ server {
 listen 80; 
 server_name $hostName;
 location / {
-    proxy_set_header Host \$http_host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_pass http://localhost:$8080;
+    default_type text/html;
+    return 200 "<!DOCTYPE html><h2>Hello World</h2>\n";
 }
 }
 EOF
