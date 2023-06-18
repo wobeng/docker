@@ -50,7 +50,7 @@ for run in {1..6}; do
     /usr/bin/echo "export USER_OUTPORT${run}=$outport" >> "$homeDir/.bashrc"
 
     # create nginx conf
-    cat << EOT >> "/etc/nginx/conf.d/${loginUsername}.conf" << EOT
+    cat << EOF >> "/etc/nginx/conf.d/${loginUsername}.conf"
 server {
 listen $outport; 
 server_name $hostName;
@@ -59,5 +59,6 @@ location / {
     proxy_set_header X-Real-IP \$remote_addr;
     proxy_pass http://localhost:$inport;
 }}
-EOT
+EOF
+     /usr/bin/echo "" >> "/etc/nginx/conf.d/${loginUsername}.conf"
 done
