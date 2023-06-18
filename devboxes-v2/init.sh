@@ -5,6 +5,7 @@ set -e
 # update the system and install packages
 sudo yum remove -y awscli
 sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
+sudo amazon-linux-extras install epel -y
 
 # mount ebs
 sudo mkfs -t ext4 /dev/sdb
@@ -12,7 +13,8 @@ sudo mkdir /data
 sudo mount /dev/sdb /data/
 sudo mkdir -p /data/home
 sudo mkdir -p /data/workspace
-sudo mkdir -p /data/ports
+sudo mkdir -p /data/ports/ports
+sudo mkdir -p /data/ports/users
 echo "/dev/sdb       /data   ext4    defaults,nofail        0       0" >> /etc/fstab
 sudo mount -a
 
@@ -20,11 +22,16 @@ sudo mount -a
 sudo systemctl restart amazon-ssm-agent
 sudo systemctl enable amazon-ssm-agent
 
-# install lamp
-sudo yum install -y httpd
-sudo amazon-linux-extras install php7.2 -y
-sudo systemctl restart httpd
-sudo systemctl enable httpd
+# install webserver
+sudo amazon-linux-extras install nginx1 -y
+sudo amazon-linux-extras enable php8.0 -y
+sudo yum install php php-cli php-mysqlnd php-pdo php-common php-fpm -y
+sudo yum install php-gd php-mbstring php-xml php-dom php-intl php-simplexml -y
+sudo yum install -y certbot python2-certbot-nginx
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+sudo systemctl start php-fpm
+sudo systemctl enable php-fpm
 
 # install terraform
 sudo yum install -y yum-utils
@@ -73,16 +80,26 @@ unzip /tmp/master.zip -d /tmp
 
 mv /tmp/docker-master/devboxes-v2/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
 mv /tmp/docker-master/devboxes-v2/bash_scripts/users.sh /etc/pam_scripts/users.sh
+mv /tmp/docker-master/devboxes-v2/bash_scripts/assign_ports.sh /etc/pam_scripts/assign_ports.sh
 
 mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/devbox
 mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
 mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
 
-sed -i "s/DOMAINS/$DOMAINS/g" /etc/pam_scripts/users.sh
+INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
+REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
+INSTANCE_NAME="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Name" --region $REGION --output=text | cut -f5`"
+INSTANCE_DOMAIN="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domain" --region $REGION --output=text | cut -f5`"
+ALLOWED_DOMAINS="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domains" --region $REGION --output=text | cut -f5`"
+
+sed -i "s/DOMAINS/$ALLOWED_DOMAINS/g" /etc/pam_scripts/users.sh
+sed -i "s/INSTANCE_NAME/$INSTANCE_NAME/g" /etc/pam_scripts/users.sh
+sed -i "s/INSTANCE_DOMAIN/$INSTANCE_DOMAIN/g" /etc/pam_scripts/users.sh
 
 sudo chmod 700 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
 sudo chown ec2-user:ec2-user /etc/pam_scripts/users.sh
+sudo chown ec2-user:ec2-user /etc/pam_scripts/assign_ports.sh
 sudo chmod ugo+x -R /etc/pam_scripts
 
 sudo chmod ugo+x /usr/local/bin/devbox
@@ -92,7 +109,11 @@ sudo chmod ugo+x /usr/local/bin/setup.sh
 
 # increase watchers
 echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
+
+# install ssl
+sudo certbot --nginx -d ${INSTANCE_NAME}.${INSTANCE_DOMAIN} --agree-tos --no-eff-email
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log

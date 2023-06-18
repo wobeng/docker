@@ -4,14 +4,12 @@ set -e
 
 
 allowedDomains="DOMAINS"
+instanceName="INSTANCE_NAME"
+instanceName="INSTANCE_DOMAIN"
 
 IP=0.0.0.0
 first_port=55535
 last_port=65535
-
-INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
-REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
-INSTANCE_NAME="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Name" --region $REGION --output=text | cut -f5`"
 
 
 for domain in ${allowedDomains//,/ }
@@ -25,7 +23,7 @@ do
 
         # get data
         curl $stateUrl/data/state.json -f -S -s -o $statePath || continue
-        curl $stateUrl/data/devboxes/${INSTANCE_NAME}.json -f -S -s -o $userStatePath || continue
+        curl $stateUrl/data/devboxes/${instanceName}.json -f -S -s -o $userStatePath || continue
 
         # don't outside users of allowed domains
         find /data/home -name "authorized_keys" -type f -delete
@@ -89,26 +87,8 @@ do
                 /usr/bin/echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
 
-                # reserve ports
-                for run in {1..6}; do
-                    # loop through ports
-                    for ((port=$first_port; port<=$last_port; port++))
-                        do
-                            # continue if port exist 
-                            if [[ -f "/data/ports/$port" ]]; then
-                                continue
-                            fi
-                            
-                            # continue if port is not free
-                            (/usr/bin/echo >/dev/tcp/$IP/$port) > /dev/null 2>&1 && continue 
-                            # reserve port
-                             /usr/bin/echo "$loginUsername" >>  "/data/ports/$port"
-                             # expose the port as env
-                             /usr/bin/echo "export USER_PORT${run}=$port" >> "$homeDir/.bashrc"
-
-                            break
-                        done
-                done
+                # reserve ports and set up nginx
+                bash  /etc/pam_scripts/assign_ports.sh $loginUsername $homeDir "${instanceName}.${instanceDomain}"
 
                 # auto start ssh agent
                 /usr/bin/echo "" >> "$homeDir/.bash_profile"
