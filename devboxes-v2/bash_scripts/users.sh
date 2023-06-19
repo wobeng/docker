@@ -89,6 +89,7 @@ do
 
                 # reserve ports and set up nginx
                 bash  /etc/pam_scripts/assign_ports.sh $loginUsername $homeDir "${instanceName}.${instanceDomain}"
+                /usr/bin/systemctl restart nginx
 
                 # auto start ssh agent
                 /usr/bin/echo "" >> "$homeDir/.bash_profile"
