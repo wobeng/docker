@@ -54,6 +54,7 @@ for run in {1..6}; do
 server {
 listen $outport ssl; 
 server_name $hostName;
+server_name *.$hostName;
 location / {
     proxy_set_header Host \$http_host;
     proxy_set_header X-Real-IP \$remote_addr;
