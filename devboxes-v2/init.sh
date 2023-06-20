@@ -28,6 +28,7 @@ sudo amazon-linux-extras enable php8.0 -y
 sudo yum install php php-cli php-mysqlnd php-pdo php-common php-fpm -y
 sudo yum install php-gd php-mbstring php-xml php-dom php-intl php-simplexml -y
 sudo yum install -y certbot python2-certbot-nginx
+sudo yum install -y python2-certbot-dns-route53
 sudo systemctl restart nginx
 sudo systemctl enable nginx
 sudo systemctl start php-fpm
