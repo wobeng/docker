@@ -119,13 +119,14 @@ hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
 server {
 listen 80; 
 server_name $hostName;
+server_name *.$hostName;
 location / {
     default_type text/html;
     return 200 "<!DOCTYPE html><h2>Hello World</h2>\n";
 }
 }
 EOF
-sudo certbot --nginx -d ${INSTANCE_NAME}.${INSTANCE_DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email
+sudo certbot -i nginx --dns-route53 -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
 sudo systemctl restart nginx
 sudo systemctl enable nginx
 
