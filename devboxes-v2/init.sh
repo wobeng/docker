@@ -3,8 +3,9 @@
 set -e
 
 # update the system and install packages
+sudo yum update -y 
 sudo yum remove -y awscli
-sudo yum update -y && sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
+sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
 sudo amazon-linux-extras install epel -y
 
 # mount ebs
