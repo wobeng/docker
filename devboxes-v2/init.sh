@@ -113,21 +113,7 @@ echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
 # install ssl
-hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
-    cat << EOF >> "/etc/nginx/conf.d/main.conf"
-server {
-listen 80; 
-server_name $hostName;
-server_name *.$hostName;
-location / {
-    default_type text/html;
-    return 200 "<!DOCTYPE html><h2>Hello World</h2>\n";
-}
-}
-EOF
 sudo certbot certonly  -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
-sudo systemctl restart nginx
-sudo systemctl enable nginx
 
 # change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
@@ -145,6 +131,22 @@ chmod 600  ~/.aws/credentials
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
+
+# add config and restart nginx
+hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
+    cat << EOF >> "/etc/nginx/conf.d/main.conf"
+server {
+listen 80; 
+server_name $hostName;
+server_name *.$hostName;
+location / {
+    default_type text/html;
+    return 200 "<!DOCTYPE html><h2>Hello World</h2>\n";
+}
+}
+EOF
+sudo systemctl restart nginx
+sudo systemctl enable nginx
 
 # add cron scripts
 touch /var/spool/cron/root
