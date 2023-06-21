@@ -119,9 +119,9 @@ sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAME
 # change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
 sudo touch ~/.aws/credentials
-/usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME || true
-/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin || true
-keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_NAME)
+/usr/local/bin/aws iam create-user --user-name $INSTANCE_ID
+/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_ID --group-name devboxes-admin
+keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_ID)
 aid=$(/usr/local/bin/aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
 /usr/local/bin/aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
 echo "[default]" >> ~/.aws/credentials
