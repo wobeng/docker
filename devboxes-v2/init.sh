@@ -152,7 +152,7 @@ sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
 touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
 echo "*/5 * * * * cd /root && /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
-echo "0 * * * * cd /root && sudo certbot renew -i nginx --dns-route53 -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
+echo "0 * * * * cd /root && sudo certbot renew -i nginx --dns-route53 --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
 
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
