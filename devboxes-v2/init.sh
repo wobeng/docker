@@ -116,8 +116,8 @@ sudo /usr/sbin/sysctl -p
 # change over permissions
 sudo mkdir ~/.aws && chmod 700 ~/.aws
 sudo touch ~/.aws/config
-/usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME
-/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin
+/usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME || true
+/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin || true
 keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_NAME)
 echo "[default]" >> ~/.aws/config
 echo "aws_access_key_id=$(echo $keys | jq --raw-output  .AccessKey.SecretAccessKey)" >> ~/.aws/config
