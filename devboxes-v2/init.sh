@@ -107,26 +107,10 @@ sudo chmod ugo+x /usr/local/bin/devbox
 sudo chmod ugo+x /usr/local/bin/sso.sh
 sudo chmod ugo+x /usr/local/bin/setup.sh
 
-
 # increase watchers
 echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
-
-# change over permissions
-sudo mkdir ~/.aws && chmod 700 ~/.aws
-sudo touch ~/.aws/credentials
-/usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME || true
-/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin || true
-keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_NAME)
-aid=$(/usr/local/bin/aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
-/usr/local/bin/aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
-echo "[default]" >> ~/.aws/credentials
-echo "aws_access_key_id=$(echo $keys | jq --raw-output .AccessKey.AccessKeyId)" >> ~/.aws/credentials
-echo "aws_secret_access_key=$(echo $keys | jq --raw-output .AccessKey.SecretAccessKey)" >> ~/.aws/credentials
-chmod 600  ~/.aws/credentials
-
-
 
 # install ssl
 hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
@@ -144,6 +128,20 @@ EOF
 sudo certbot certonly  -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
 sudo systemctl restart nginx
 sudo systemctl enable nginx
+
+# change over permissions
+sudo mkdir ~/.aws && chmod 700 ~/.aws
+sudo touch ~/.aws/credentials
+/usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME || true
+/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin || true
+keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_NAME)
+aid=$(/usr/local/bin/aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
+/usr/local/bin/aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
+echo "[default]" >> ~/.aws/credentials
+echo "aws_access_key_id=$(echo $keys | jq --raw-output .AccessKey.AccessKeyId)" >> ~/.aws/credentials
+echo "aws_secret_access_key=$(echo $keys | jq --raw-output .AccessKey.SecretAccessKey)" >> ~/.aws/credentials
+chmod 600  ~/.aws/credentials
+
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
