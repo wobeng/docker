@@ -12,10 +12,10 @@ first_port=55535
 last_port=65535
 
 
-for domain in ${allowedDomains//,/ }
+for fulldomain in ${allowedDomains//,/ }
 do
 
-        stateUrl="https://s3.amazonaws.com/public-gws-aws.$domain"
+        stateUrl="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
 
         # remove dot from domain
         domain=$(echo $domain | sed -e 's/\.//g)
@@ -52,7 +52,6 @@ do
 
             uuid=$(/usr/bin/echo "$ipid" | cut -c -5)
             username=$(/usr/bin/echo $email | cut -d@ -f1)
-            fulldomain=$(/usr/bin/echo  $email | cut -d@ -f2)
             loginUsername="$domain-$username"
             homeDir="/data/home/$loginUsername"
             workspaceDir="/data/workspace/$loginUsername"
@@ -85,7 +84,6 @@ do
                 # add envs
                 /usr/bin/touch "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_NAME=$loginUsername" >> "$homeDir/.bashrc"
-                /usr/bin/echo "export USER_DOMAIN=$domain" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_FULLDOMAIN=$fulldomain" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_EMAIL=$email" >> "$homeDir/.bashrc"
                 /usr/bin/echo "export USER_WORKSPACE=$workspaceDir" >> "$homeDir/.bashrc"
