@@ -7,7 +7,7 @@ username=$(/usr/bin/echo ${1}| cut -d- -f2)
 
 statePath="/etc/pam_scripts/users/$domain-state.json"
 stateUsersPath="/etc/pam_scripts/users/$domain-users.json"
-stateUrl="https://s3.amazonaws.com/public-gws-aws.$domain"
+stateUrl="s3://public-gws-aws.$domain"
 
 exit_nicely()
 {
@@ -35,7 +35,7 @@ if [ $? -ne 0 ]; then
     exit_nicely "$@"
 fi
 
-pubkey=$(curl -H 'Cache-Control: no-cache, no-store' --fail-with-body -s $stateUrl/users/keys/${email}.pub)
+pubkey=$(/usr/local/bin/aws s3 cp $stateUrl/users/keys/${email}.pub - )
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit_nicely "$@"
