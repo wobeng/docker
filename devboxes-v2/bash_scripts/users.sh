@@ -14,8 +14,7 @@ last_port=65535
 
 for fulldomain in ${allowedDomains//,/ }
 do
-
-        stateUrl="https://s3.amazonaws.com/public-gws-aws.$fulldomain"
+        stateUrl="s3://public-gws-aws.$fulldomain"
 
         # remove dot from domain
         domain=$(echo $domain | sed -e 's/\.//g)
