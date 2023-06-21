@@ -29,13 +29,13 @@ if [ $dtSec -lt $taSec  ]; then
     exit_nicely "$@"
 fi
 
-resp=$(cat $stateUsersPath | jq -r ".users[] | select(.email | startswith(\"$username@$domain\")) | .email")
+email=$(cat $stateUsersPath | jq -r ".users[] | select(.email | startswith(\"$username@\")) | .email")
 if [ $? -ne 0 ]; then
     echo "unauthorized: sending client infomation to server...."
     exit_nicely "$@"
 fi
 
-pubkey=$(curl -H 'Cache-Control: no-cache, no-store' --fail-with-body -s $stateUrl/users/keys/${username}.pub)
+pubkey=$(curl -H 'Cache-Control: no-cache, no-store' --fail-with-body -s $stateUrl/users/keys/${email}.pub)
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit_nicely "$@"
