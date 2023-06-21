@@ -113,6 +113,20 @@ echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
+# change over permissions
+sudo mkdir ~/.aws && chmod 700 ~/.aws
+sudo touch ~/.aws/config
+/usr/local/bin/aws iam create-user --user-name ${INSTANCE_NAME}
+/usr/local/bin/aws iam add-user-to-group --user-name ${INSTANCE_NAME} --group-name devboxes-admin
+keys=$(/usr/local/bin/aws iam create-access-key --user-name ${INSTANCE_NAME})
+echo "[default]" >> ~/.aws/config
+echo "aws_access_key_id=$($keys | jq --raw-output  .AccessKey.SecretAccessKey)" >> ~/.aws/config
+echo "aws_secret_access_key=$($keys | jq --raw-output  .AccessKey.AccessKeyId)" >> ~/.aws/config
+chmod 600  ~/.aws/config
+aid=$(/usr/local/bin/aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
+/usr/local/bin/aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
+
+
 # install ssl
 hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
     cat << EOF >> "/etc/nginx/conf.d/main.conf"
@@ -137,6 +151,7 @@ sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
 touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
 echo "*/5 * * * * cd /root && /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
+echo "0 * * * * cd /root && sudo certbot renew -i nginx --dns-route53 -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
 
 sudo sed -i 's/#Port 22/Port 55977/g' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
