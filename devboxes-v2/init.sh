@@ -113,7 +113,7 @@ echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
 # install ssl
-sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
+sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" -d "${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
 
 # change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
