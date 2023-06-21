@@ -129,7 +129,7 @@ sudo certbot certonly  -i nginx --dns-route53 --no-redirect -d "*.${INSTANCE_NAM
 sudo systemctl restart nginx
 sudo systemctl enable nginx
 
-# change over permissions
+# change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
 sudo touch ~/.aws/credentials
 /usr/local/bin/aws iam create-user --user-name $INSTANCE_NAME || true
