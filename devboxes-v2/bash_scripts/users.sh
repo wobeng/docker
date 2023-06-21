@@ -17,7 +17,7 @@ do
         stateUrl="s3://public-gws-aws.$fulldomain"
 
         # remove dot from domain
-        domain=$(echo $domain | sed -e 's/\.//g)
+        domain=$(echo $fulldomain | sed -e 's/\.//g)
         
         statePath="/etc/pam_scripts/users/$domain-state.json"
         userStatePath="/etc/pam_scripts/users/$domain-users.json"
