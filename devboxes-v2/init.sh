@@ -120,6 +120,7 @@ sudo touch ~/.aws/config
 /usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_NAME --group-name devboxes-admin || true
 keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_NAME)
 echo "[default]" >> ~/.aws/config
+echo "region=us-east-1"
 echo "aws_access_key_id=$(echo $keys | jq --raw-output .AccessKey.AccessKeyId)" >> ~/.aws/config
 echo "aws_secret_access_key=$(echo $keys | jq --raw-output .AccessKey.SecretAccessKey)" >> ~/.aws/config
 chmod 600  ~/.aws/config
