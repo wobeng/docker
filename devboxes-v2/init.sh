@@ -114,7 +114,7 @@ echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
 # install ssl
-# sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "${INSTANCE_NAME}.${INSTANCE_DOMAIN}" -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
+sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "${INSTANCE_NAME}.${INSTANCE_DOMAIN}" -d "*.${INSTANCE_NAME}.${INSTANCE_DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --expand
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
@@ -132,7 +132,6 @@ location / {
 }
 }
 EOF
-sudo systemctl reload nginx
 
 # add cron scripts
 touch /var/spool/cron/root
