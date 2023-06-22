@@ -118,7 +118,6 @@ sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "${INSTANCE_NAME}.
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
-sudo systemctl restart nginx
 
 # add config and restart nginx
 hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
@@ -139,6 +138,9 @@ touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
 echo "*/5 * * * * cd /root && /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
 echo "0 * * * * cd /root && sudo certbot renew -i nginx --dns-route53 --no-redirect --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
+
+#reload nginx
+sudo systemctl reload nginx
 
 # change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
