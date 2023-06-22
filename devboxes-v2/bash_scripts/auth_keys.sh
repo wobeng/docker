@@ -7,7 +7,6 @@ username=$(/usr/bin/echo ${1}| cut -d- -f2)
 
 statePath="/etc/pam_scripts/users/$domain-state.json"
 stateUsersPath="/etc/pam_scripts/users/$domain-users.json"
-stateUrl="s3://public-gws-aws.$domain"
 
 exit_nicely()
 {
@@ -35,6 +34,8 @@ if [ $? -ne 0 ]; then
     exit_nicely "$@"
 fi
 
+fulldomain=$(echo "${email#*@}")
+stateUrl="s3://public-gws-aws.$fulldomain"
 pubkey=$(/usr/local/bin/aws s3 cp $stateUrl/users/keys/${email}.pub - )
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
