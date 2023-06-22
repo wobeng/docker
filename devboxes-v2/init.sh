@@ -118,6 +118,7 @@ sudo certbot certonly -i nginx --dns-route53 --no-redirect -d "${INSTANCE_NAME}.
 
 # create users
 sudo /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log
+sudo systemctl restart nginx
 
 # add config and restart nginx
 hostName="${INSTANCE_NAME}.${INSTANCE_DOMAIN}"
