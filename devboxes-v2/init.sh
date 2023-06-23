@@ -137,7 +137,7 @@ EOF
 touch /var/spool/cron/root
 /usr/bin/crontab /var/spool/cron/root
 echo "*/5 * * * * cd /root && /bin/bash -c '/etc/pam_scripts/users.sh' >> /var/log/create-users.log 2>&1" >> /var/spool/cron/root
-echo "0 * * * * cd /root && sudo certbot renew -i nginx --dns-route53 --no-redirect --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
+echo "0 0 * * 0 cd /root && sudo certbot renew -i nginx --dns-route53 --no-redirect --non-interactive --agree-tos --register-unsafely-without-email --expand" >> /var/spool/cron/root
 
 #reload nginx
 sudo systemctl reload nginx
