@@ -39,6 +39,7 @@ node --version
 npm config set strict-ssl false
 npm config set unsafe-perm=true
 sudo npm install -g @angular/cli > /dev/null
+sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
 sudo npm install -g @bartholomej/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
 
