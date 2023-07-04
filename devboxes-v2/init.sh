@@ -68,7 +68,7 @@ sudo npm install -g @bartholomej/ngx-translate-extract @angular/compiler typescr
 # set aws cli
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 unzip -o awscliv2.zip
-sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
 
 sudo sed -i 's/#region = us-east-1/region = us-east-1/g' /etc/amazon/efs/efs-utils.conf
 
