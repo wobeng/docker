@@ -60,7 +60,6 @@ curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 sudo yum install -y nodejs
 sudo npm install -g npm@9.7.2
 npm config set strict-ssl false
-npm config set unsafe-perm=true
 sudo npm install -g @angular/cli > /dev/null
 sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
