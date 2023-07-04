@@ -6,7 +6,7 @@ set -e
 sudo yum update -y 
 sudo yum remove -y awscli
 sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
-sudo yum install -y make glibc-devel gcc patch
+sudo yum install -y make glibc-devel gcc patch install gcc-c++
 sudo amazon-linux-extras install epel -y
 
 # mount ebs
