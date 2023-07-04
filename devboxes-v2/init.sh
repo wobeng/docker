@@ -6,6 +6,7 @@ set -e
 sudo yum update -y 
 sudo yum remove -y awscli
 sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
+sudo yum install make glibc-devel gcc patch
 sudo amazon-linux-extras install epel -y
 
 # mount ebs
@@ -57,7 +58,7 @@ python3 -m pip uninstall awscli
 # set up node
 curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 sudo yum install -y nodejs
-node --version
+sudo npm install -g npm@9.7.2
 npm config set strict-ssl false
 npm config set unsafe-perm=true
 sudo npm install -g @angular/cli > /dev/null
