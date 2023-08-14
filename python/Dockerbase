@@ -13,18 +13,18 @@ RUN pip3 install --upgrade pip
 RUN mkdir -p -m 0600 ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-# Entry
-RUN printf "#!/bin/bash\n \
-    \nif [[ -z \"\${AWS_EXECUTION_ENV}\" ]]; then  \
-    \n  exec \"\$@\" \
-    \nelse \
-    \n  if [[ -z \"\${PORT}\" ]]; then  \
-    \n      source /lambda-entrypoint.sh main.handler \"\$@\" \
-    \n  else \
-    \n      echo \"Running on port \${PORT}\" \
-    \n      gunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \`cat /proc/cpuinfo | grep 'core id' | wc -l\` )) --bind 0.0.0.0:\${PORT} --timeout 120 main:app  \
-    \n  fi \
-    \nfi\n"  > init.sh
+# entry
+RUN printf "#!/bin/bash\\n \
+\\nif [[ -n \"\${AWS_BATCH_JOB_ID}\" ]]; then\\n \
+    python -m main\\n \
+elif [[ -n \"\${AWS_EXECUTION_ENV}\" && -z \"\${PORT}\" ]]; then\\n \
+    source /lambda-entrypoint.sh main.handler \"\$@\"\\n \
+elif [[ -n \"\${AWS_EXECUTION_ENV}\" && -n \"\${PORT}\" ]]; then\\n \
+    echo \"Running on port \${PORT}\"\\n \
+    gunicorn --worker-tmp-dir /dev/shm --workers \$(( 2 * \$(cat /proc/cpuinfo | grep 'core id' | wc -l) )) --bind 0.0.0.0:\${PORT} --timeout 120 main:app\\n \
+else\\n \
+    exec \"\$@\"\\n \
+fi\\n" > init.sh
 
 RUN chmod +x /var/task/init.sh
 ENTRYPOINT ["/var/task/init.sh" ]
