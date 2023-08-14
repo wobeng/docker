@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM public.ecr.aws/yblew/y-python-master:latest
-
+FROM public.ecr.aws/yblew/y-docker-python-master:latest
 # Copy app files
 COPY . ${LAMBDA_TASK_ROOT}
 
