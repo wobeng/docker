@@ -27,6 +27,5 @@ else\n \
     exec \"\$@\"\n \
 fi\n" > init.sh
 
-RUN cat /var/task/init.sh
 RUN chmod +x /var/task/init.sh
 ENTRYPOINT ["/var/task/init.sh" ]
