@@ -15,6 +15,7 @@ RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # entry
 RUN printf "#!/bin/bash\n \
+env
 \nif [[ -n \"\${AWS_BATCH_JQ_NAME}\" ]]; then\n \
     python -m main\n \
 elif [[ -n \"\${AWS_EXECUTION_ENV}\" && -z \"\${PORT}\" ]]; then\n \
@@ -26,5 +27,6 @@ else\n \
     exec \"\$@\"\n \
 fi\n" > init.sh
 
+RUN cat /var/task/init.sh
 RUN chmod +x /var/task/init.sh
 ENTRYPOINT ["/var/task/init.sh" ]
