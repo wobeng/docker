@@ -56,8 +56,8 @@ python3 -m pip install botocore
 python3 -m pip uninstall awscli
 
 # set up node
-curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
-sudo yum install -y nodejs
+sudo yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
+sudo yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
 sudo npm install -g npm@9.7.2
 npm config set strict-ssl false
 sudo npm install -g @angular/cli > /dev/null

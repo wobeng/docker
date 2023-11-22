@@ -33,8 +33,8 @@ python3 -m pip install botocore
 python3 -m pip uninstall awscli
 
 # set up node
-curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
-sudo yum install -y nodejs
+sudo yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
+sudo yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
 node --version
 npm config set strict-ssl false
 npm config set unsafe-perm=true
