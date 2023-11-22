@@ -63,7 +63,7 @@ npm config set strict-ssl false
 sudo npm install -g @angular/cli > /dev/null
 sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
-sudo npm install -g @bartholomej/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
+sudo npm install -g @vendure/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
 
 # set aws cli
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
