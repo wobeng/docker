@@ -1,4 +1,6 @@
 #!/bin/bash
+# use amazon linux 2023 next time and install python 3.11
+# see https://docs.aws.amazon.com/linux/al2023/ug/compare-with-al2.html and adjust
 
 set -e
 
@@ -51,6 +53,7 @@ sudo systemctl enable docker
 sudo usermod -aG docker ec2-user  
 
 # set up python
+
 python3  --version
 python3 -m pip install botocore
 python3 -m pip uninstall awscli
