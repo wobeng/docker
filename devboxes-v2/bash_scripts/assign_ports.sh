@@ -58,6 +58,8 @@ server_name *.$hostName;
 location / {
     proxy_set_header Host \$http_host;
     proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header Cross-Origin-Embedder-Policy require-corp;
+    proxy_set_header Cross-Origin-Opener-Policy same-origin;
     proxy_pass http://localhost:$inport;
 }
 ssl_certificate /etc/letsencrypt/live/$hostName/fullchain.pem; # managed by Certbot
