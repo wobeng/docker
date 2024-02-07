@@ -24,8 +24,8 @@ do
         lastSync="/etc/pam_scripts/users/$domain-lastSync.txt"
 
         # get data
-        /usr/local/bin/aws s3 cp $stateUrl/data/state.json $statePath || continue
-        /usr/local/bin/aws s3 cp $stateUrl/data/devboxes/${instanceName}.json $userStatePath || continue
+        aws s3 cp $stateUrl/data/state.json $statePath || continue
+        aws s3 cp $stateUrl/data/devboxes/${instanceName}.json $userStatePath || continue
 
         # don't outside users of allowed domains
         find /data/home -name "authorized_keys" -type f -delete
