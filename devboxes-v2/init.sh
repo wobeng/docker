@@ -1,15 +1,11 @@
 #!/bin/bash
-# use amazon linux 2023 next time and install python 3.11
-# see https://docs.aws.amazon.com/linux/al2023/ug/compare-with-al2.html and adjust
-
 set -e
 
 # update the system and install packages
-sudo yum update -y 
-sudo yum remove -y awscli
-sudo yum install -y rsync gettext jq amazon-efs-utils git zip unzip
-sudo yum install -y make glibc-devel gcc patch install gcc-c++
-sudo amazon-linux-extras install epel -y
+sudo dnf update -y 
+sudo dnf install -y rsync gettext jq amazon-efs-utils git zip unzip
+sudo dnf install -y make glibc-devel gcc patch gcc-c++
+
 
 # mount ebs
 sudo mkfs -t ext4 /dev/sdb
@@ -26,71 +22,77 @@ sudo mount -a
 sudo systemctl restart amazon-ssm-agent
 sudo systemctl enable amazon-ssm-agent
 
+
+# Set up Python 3.11
+sudo dnf install python3.11 -y
+sudo python3.11 -m ensurepip
+sudo python3.11 -m pip install botocore
+
+# install certbot
+sudo dnf install -y augeas-libs
+sudo python3.11 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot certbot-nginx certbot-dns-route53
+sudo ln -sf /opt/certbot/bin/certbot /usr/bin/certbot
+
+
 # install webserver
-sudo amazon-linux-extras install nginx1 -y
-sudo amazon-linux-extras enable php8.0 -y
-sudo yum install php php-cli php-mysqlnd php-pdo php-common php-fpm -y
-sudo yum install php-gd php-mbstring php-xml php-dom php-intl php-simplexml -y
-sudo yum install -y certbot python2-certbot-nginx
-sudo yum install -y python2-certbot-dns-route53
+sudo dnf install nginx -y
+sudo dnf install php php-cli php-mysqlnd php-pdo php-common php-fpm -y
+sudo dnf install php-gd php-mbstring php-xml php-dom php-intl php-simplexml -y
 sudo systemctl restart nginx
 sudo systemctl enable nginx
 sudo systemctl start php-fpm
 sudo systemctl enable php-fpm
 
-# install terraform
-sudo yum install -y yum-utils
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-sudo yum -y install terraform
+
+# Install terraform
+sudo dnf install -y yum-utils
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo dnf -y install terraform
 
 # set up golang
-sudo amazon-linux-extras install golang1.19 -y
+sudo dnf install golang -y
 
 # Install docker
-sudo amazon-linux-extras install docker -y
+sudo dnf install docker -y
 sudo systemctl restart docker
 sudo systemctl enable docker
 sudo usermod -aG docker ec2-user  
 
-# set up python
-
-python3  --version
-python3 -m pip install botocore
-python3 -m pip uninstall awscli
 
 # set up node
-sudo yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
-sudo yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
-sudo npm install -g npm@9.7.2
+curl -fsSL https://rpm.nodesource.com/setup_current.x | sudo bash -
+sudo dnf install -y nodejs
+node --version
+npm --version
+sudo npm install -g npm@latest
 npm config set strict-ssl false
 sudo npm install -g @angular/cli > /dev/null
 sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
 sudo npm install -g @vendure/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
 
-# set aws cli
-curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-unzip -o awscliv2.zip
-./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
 
+# update  region on efs
 sudo sed -i 's/#region = us-east-1/region = us-east-1/g' /etc/amazon/efs/efs-utils.conf
 
 # add user script
 sudo mkdir -p /etc/pam_scripts/users
 sudo mkdir -p /var/log/exported
-chmod 777 /var/log/exported
+sudo chmod 777 /var/log/exported
 
 rm -rf /tmp/docker-master
 curl -L "https://github.com/wobeng/docker/archive/refs/heads/master.zip" -o "/tmp/master.zip"
 unzip /tmp/master.zip -d /tmp
 
-mv /tmp/docker-master/devboxes-v2/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
-mv /tmp/docker-master/devboxes-v2/bash_scripts/users.sh /etc/pam_scripts/users.sh
-mv /tmp/docker-master/devboxes-v2/bash_scripts/assign_ports.sh /etc/pam_scripts/assign_ports.sh
+sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
+sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/users.sh /etc/pam_scripts/users.sh
+sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/assign_ports.sh /etc/pam_scripts/assign_ports.sh
 
-mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/devbox
-mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
-mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
+sudo mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/devbox
+sudo mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
+sudo mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
 
 INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
 REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
@@ -98,9 +100,9 @@ INSTANCE_NAME="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id
 INSTANCE_DOMAIN="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domain" --region $REGION --output=text | cut -f5`"
 ALLOWED_DOMAINS="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domains" --region $REGION --output=text | cut -f5`"
 
-sed -i "s/DOMAINS/$ALLOWED_DOMAINS/g" /etc/pam_scripts/users.sh
-sed -i "s/INSTANCE_NAME/$INSTANCE_NAME/g" /etc/pam_scripts/users.sh
-sed -i "s/INSTANCE_DOMAIN/$INSTANCE_DOMAIN/g" /etc/pam_scripts/users.sh
+sudo sed -i "s/DOMAINS/$ALLOWED_DOMAINS/g" /etc/pam_scripts/users.sh
+sudo sed -i "s/INSTANCE_NAME/$INSTANCE_NAME/g" /etc/pam_scripts/users.sh
+sudo sed -i "s/INSTANCE_DOMAIN/$INSTANCE_DOMAIN/g" /etc/pam_scripts/users.sh
 
 sudo chmod 700 /etc/pam_scripts
 sudo chown root:root -R /etc/pam_scripts
@@ -113,8 +115,8 @@ sudo chmod ugo+x /usr/local/bin/sso.sh
 sudo chmod ugo+x /usr/local/bin/setup.sh
 
 # increase watchers
-echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
-echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+sudo echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+sudo echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 sudo /usr/sbin/sysctl -p
 
 # install ssl
