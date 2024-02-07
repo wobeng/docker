@@ -7,6 +7,12 @@ sudo dnf install -y rsync gettext jq amazon-efs-utils git zip unzip
 sudo dnf install -y make glibc-devel gcc patch gcc-c++
 
 
+# install cronie
+sudo dnf install cronie
+sudo systemctl enable crond
+sudo systemctl start crond
+sudo systemctl status crond
+
 # mount ebs
 sudo mkfs -t ext4 /dev/sdb
 sudo mkdir /data
