@@ -111,6 +111,6 @@ do
         done
 
         # update lastSync
-        /usr/local/bin/aws s3 cp $stateUrl/data/state.json - | jq -r '.lastSync' > $lastSync
+        aws s3 cp $stateUrl/data/state.json - | jq -r '.lastSync' > $lastSync
 
 done
