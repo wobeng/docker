@@ -36,7 +36,7 @@ fi
 
 fulldomain=$(echo "${email#*@}")
 stateUrl="s3://public-gws-aws.$fulldomain"
-pubkey=$(/usr/local/bin/aws s3 cp $stateUrl/users/keys/${email}.pub - )
+pubkey=$(aws s3 cp $stateUrl/users/keys/${email}.pub - )
 if [ $? -ne 0 ]; then
     echo "something went wrong with pub key"
     exit_nicely "$@"
