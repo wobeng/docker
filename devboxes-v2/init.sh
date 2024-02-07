@@ -8,7 +8,7 @@ sudo dnf install -y make glibc-devel gcc patch gcc-c++
 
 
 # install cronie
-sudo dnf install cronie
+sudo dnf install cronie -y
 sudo systemctl enable crond
 sudo systemctl start crond
 sudo systemctl status crond
