@@ -94,11 +94,13 @@ sudo mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/dev
 sudo mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
 sudo mv /tmp/docker-master/devboxes-v2/user_scripts/sso.sh /usr/local/bin/sso.sh
 
-INSTANCE_ID="`wget -qO- http://instance-data/latest/meta-data/instance-id`"
-REGION="`wget -qO- http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
-INSTANCE_NAME="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Name" --region $REGION --output=text | cut -f5`"
-INSTANCE_DOMAIN="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domain" --region $REGION --output=text | cut -f5`"
-ALLOWED_DOMAINS="`/usr/local/bin/aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domains" --region $REGION --output=text | cut -f5`"
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" -s`
+INSTANCE_ID=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -s "http://169.254.169.254/latest/meta-data/instance-id"`
+AVAILABILITY_ZONE=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -s "http://169.254.169.254/latest/meta-data/placement/availability-zone"`
+REGION="${AVAILABILITY_ZONE%?}"
+INSTANCE_NAME="`aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Name" --region $REGION --output=text | cut -f5`"
+INSTANCE_DOMAIN="`aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domain" --region $REGION --output=text | cut -f5`"
+ALLOWED_DOMAINS="`aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Domains" --region $REGION --output=text | cut -f5`"
 
 sudo sed -i "s/DOMAINS/$ALLOWED_DOMAINS/g" /etc/pam_scripts/users.sh
 sudo sed -i "s/INSTANCE_NAME/$INSTANCE_NAME/g" /etc/pam_scripts/users.sh
@@ -151,11 +153,11 @@ sudo systemctl reload nginx
 # change over iam role from devboxes-admin to devboxes
 sudo mkdir ~/.aws && chmod 700 ~/.aws
 sudo touch ~/.aws/credentials
-/usr/local/bin/aws iam create-user --user-name $INSTANCE_ID
-/usr/local/bin/aws iam add-user-to-group --user-name $INSTANCE_ID --group-name devboxes-admin
-keys=$(/usr/local/bin/aws iam create-access-key --user-name $INSTANCE_ID)
-aid=$(/usr/local/bin/aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
-/usr/local/bin/aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
+aws iam create-user --user-name $INSTANCE_ID
+aws iam add-user-to-group --user-name $INSTANCE_ID --group-name devboxes-admin
+keys=$(aws iam create-access-key --user-name $INSTANCE_ID)
+aid=$(aws ec2 describe-iam-instance-profile-associations  --region us-east-1 --filters Name=instance-id,Values=$INSTANCE_ID | jq --raw-output  .IamInstanceProfileAssociations[0].AssociationId)
+aws ec2 replace-iam-instance-profile-association --iam-instance-profile Name=devboxes --association-id $aid
 echo "[default]" >> ~/.aws/credentials
 echo "aws_access_key_id=$(echo $keys | jq --raw-output .AccessKey.AccessKeyId)" >> ~/.aws/credentials
 echo "aws_secret_access_key=$(echo $keys | jq --raw-output .AccessKey.SecretAccessKey)" >> ~/.aws/credentials
