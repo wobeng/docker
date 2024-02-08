@@ -79,6 +79,12 @@ sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
 sudo npm install -g @vendure/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
 
+# set up ffmpeg
+sudo wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
+sudo tar xvf ffmpeg-release-arm64-static.tar.xz
+sudo cp ffmpeg-*/ffmpeg /usr/local/bin/
+sudo cp ffmpeg-*/ffprobe /usr/local/bin/
+sudo cp ffmpeg-*/qt-faststart /usr/local/bin/
 
 # update  region on efs
 sudo sed -i 's/#region = us-east-1/region = us-east-1/g' /etc/amazon/efs/efs-utils.conf
