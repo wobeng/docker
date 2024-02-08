@@ -68,7 +68,7 @@ sudo usermod -aG docker ec2-user
 
 
 # set up node
-curl -fsSL https://rpm.nodesource.com/setup_current.x | sudo bash -
+curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo dnf install -y nodejs
 node --version
 npm --version
