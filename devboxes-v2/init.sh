@@ -3,8 +3,9 @@ set -e
 
 # update the system and install packages
 sudo dnf update -y 
-sudo dnf install -y rsync gettext jq amazon-efs-utils git zip unzip
+sudo dnf groupinstall "Development Tools" -y
 sudo dnf install -y make glibc-devel gcc patch gcc-c++
+sudo dnf install -y rsync gettext jq amazon-efs-utils git zip unzip
 
 
 # install cronie
@@ -41,7 +42,6 @@ sudo /opt/certbot/bin/pip install --upgrade pip
 sudo /opt/certbot/bin/pip install certbot certbot-nginx certbot-dns-route53
 sudo ln -sf /opt/certbot/bin/certbot /usr/bin/certbot
 
-
 # install webserver
 sudo dnf install nginx -y
 sudo dnf install php php-cli php-mysqlnd php-pdo php-common php-fpm -y
@@ -50,7 +50,6 @@ sudo systemctl restart nginx
 sudo systemctl enable nginx
 sudo systemctl start php-fpm
 sudo systemctl enable php-fpm
-
 
 # Install terraform
 sudo dnf install -y yum-utils
@@ -66,12 +65,9 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 sudo usermod -aG docker ec2-user  
 
-
 # set up node
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo dnf install -y nodejs
-node --version
-npm --version
 sudo npm install -g npm@latest
 npm config set strict-ssl false
 sudo npm install -g @angular/cli > /dev/null
@@ -79,9 +75,14 @@ sudo npm install -g nx@latest > /dev/null
 sudo npm install -g angular-gettext-cli
 sudo npm install -g @vendure/ngx-translate-extract @angular/compiler typescript tslib@^1.10.0 braces --save-dev
 
+#  set up puppeteer
+sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo dnf install -y ./google-chrome-stable_current_x86_64.rpm
+sudo npm install -g puppeteer
+
 # set up ffmpeg
-sudo wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
-sudo tar xvf ffmpeg-release-arm64-static.tar.xz
+sudo wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+sudo tar xvf ffmpeg-release-amd64-static.tar.xz
 sudo cp ffmpeg-*/ffmpeg /usr/local/bin/
 sudo cp ffmpeg-*/ffprobe /usr/local/bin/
 sudo cp ffmpeg-*/qt-faststart /usr/local/bin/
