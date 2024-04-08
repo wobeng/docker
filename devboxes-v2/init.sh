@@ -102,6 +102,7 @@ unzip /tmp/master.zip -d /tmp
 sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/auth_keys.sh /etc/pam_scripts/auth_keys.sh
 sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/users.sh /etc/pam_scripts/users.sh
 sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/assign_ports.sh /etc/pam_scripts/assign_ports.sh
+sudo mv /tmp/docker-master/devboxes-v2/bash_scripts/ssh_agent.sh /etc/pam_scripts/ssh_agent.sh
 
 sudo mv /tmp/docker-master/devboxes-v2/user_scripts/devbox.sh /usr/local/bin/devbox
 sudo mv /tmp/docker-master/devboxes-v2/user_scripts/setup.sh /usr/local/bin/setup.sh
