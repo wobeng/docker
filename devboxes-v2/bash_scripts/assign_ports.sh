@@ -56,7 +56,7 @@ listen $outport ssl;
 server_name $hostName;
 server_name *.$hostName;
 location / {
-    proxy_set_header Host \$http_host;
+    proxy_set_header Host \$host:$inport;
     proxy_set_header X-Real-IP \$remote_addr;
     proxy_pass http://localhost:$inport;
 }
